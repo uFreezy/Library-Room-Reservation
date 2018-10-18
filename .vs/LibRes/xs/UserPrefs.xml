@@ -1,0 +1,18 @@
+﻿<Properties StartupConfiguration="{12ED90FA-7FA3-4D95-AA94-2924F9DC70B3}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="LibRes.App/DbModels/SampleModel.cs">
+    <Files>
+      <File FileName="LibRes.App/Views/Account/Register.cshtml" Line="6" Column="50" />
+      <File FileName="LibRes.App/Controllers/AccountController.cs" Line="73" Column="1" />
+      <File FileName="LibRes.App/DbModels/SampleModel.cs" Line="6" Column="16" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.LibRes.App PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <FunctionBreakpoint line="0" column="0" function="Login" language="C#" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+</Properties>
