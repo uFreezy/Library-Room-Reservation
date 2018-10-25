@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibRes.App.Migrations
 {
     [DbContext(typeof(LibResDbContext))]
-    [Migration("20181017135147_Version")]
-    partial class Version
+    [Migration("20181025095628_migration3")]
+    partial class migration3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,21 +21,71 @@ namespace LibRes.App.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("LibRes.App.DbModels.SampleModel", b =>
+            modelBuilder.Entity("LibRes.App.DbModels.EventOccuranceModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100);
+                    b.Property<DateTime>("Occurance");
 
-                    b.Property<int>("Year");
+                    b.Property<int>("ReservationId");
 
                     b.HasKey("Id");
 
-                    b.ToTable("SampleModels");
+                    b.HasIndex("ReservationId");
+
+                    b.ToTable("EventOccurances");
+                });
+
+            modelBuilder.Entity("LibRes.App.DbModels.ReservationModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("BeginHour")
+                        .IsRequired();
+
+                    b.Property<string>("Department")
+                        .IsRequired();
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("EndHour")
+                        .IsRequired();
+
+                    b.Property<string>("EventName")
+                        .IsRequired();
+
+                    b.Property<int>("MeetingRoomId");
+
+                    b.Property<string>("ReservationOwnerId")
+                        .IsRequired();
+
+                    b.Property<bool>("WantsMultimedia");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MeetingRoomId");
+
+                    b.HasIndex("ReservationOwnerId");
+
+                    b.ToTable("ReservationModels");
+                });
+
+            modelBuilder.Entity("LibRes.App.DbModels.RoomModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("RoomName")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RoomModels");
                 });
 
             modelBuilder.Entity("LibRes.App.Models.ApplicationUser", b =>
@@ -52,6 +102,14 @@ namespace LibRes.App.Migrations
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(30);
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(30);
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -113,7 +171,7 @@ namespace LibRes.App.Migrations
                     b.ToTable("AspNetRoles");
 
                     b.HasData(
-                        new { Id = "ce0db18d-0700-4b79-bf0e-fe536f0ac26b", ConcurrencyStamp = "7be67dc0-a9c8-4534-9b06-00f800fed016", Name = "Admin", NormalizedName = "ADMIN" }
+                        new { Id = "557b2711-0d33-4059-a56c-b5bdb10b70d4", ConcurrencyStamp = "2e0cf1dc-286d-491d-b4c0-9299c3b46564", Name = "Admin", NormalizedName = "ADMIN" }
                     );
                 });
 
@@ -201,6 +259,27 @@ namespace LibRes.App.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("LibRes.App.DbModels.EventOccuranceModel", b =>
+                {
+                    b.HasOne("LibRes.App.DbModels.ReservationModel", "Reservation")
+                        .WithMany("EventDates")
+                        .HasForeignKey("ReservationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("LibRes.App.DbModels.ReservationModel", b =>
+                {
+                    b.HasOne("LibRes.App.DbModels.RoomModel", "MeetingRoom")
+                        .WithMany("RoomReservations")
+                        .HasForeignKey("MeetingRoomId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("LibRes.App.Models.ApplicationUser", "ReservationOwner")
+                        .WithMany("Reservations")
+                        .HasForeignKey("ReservationOwnerId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

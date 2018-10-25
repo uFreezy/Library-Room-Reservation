@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LibRes.App.Migrations
 {
-    public partial class Version : Migration
+    public partial class migration2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -48,17 +48,16 @@ namespace LibRes.App.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SampleModels",
+                name: "RoomModels",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 100, nullable: false),
-                    Year = table.Column<int>(nullable: false)
+                    RoomName = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SampleModels", x => x.Id);
+                    table.PrimaryKey("PK_RoomModels", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -167,10 +166,62 @@ namespace LibRes.App.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ReservationModels",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    EventName = table.Column<string>(nullable: false),
+                    BeginHour = table.Column<string>(nullable: false),
+                    EndHour = table.Column<string>(nullable: false),
+                    MeetingRoomId = table.Column<int>(nullable: false),
+                    Department = table.Column<string>(nullable: false),
+                    ReservationOwnerId = table.Column<string>(nullable: false),
+                    WantsMultimedia = table.Column<bool>(nullable: false),
+                    Description = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReservationModels", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReservationModels_RoomModels_MeetingRoomId",
+                        column: x => x.MeetingRoomId,
+                        principalTable: "RoomModels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReservationModels_AspNetUsers_ReservationOwnerId",
+                        column: x => x.ReservationOwnerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EventOccurances",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ReservationId = table.Column<int>(nullable: false),
+                    Occurance = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventOccurances", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EventOccurances_ReservationModels_ReservationId",
+                        column: x => x.ReservationId,
+                        principalTable: "ReservationModels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "ce0db18d-0700-4b79-bf0e-fe536f0ac26b", "7be67dc0-a9c8-4534-9b06-00f800fed016", "Admin", "ADMIN" });
+                values: new object[] { "8fc505ae-2ecb-4dde-b76b-74e49e6ae405", "79bde5b7-010b-49f9-be7e-56c6db1de395", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -210,6 +261,21 @@ namespace LibRes.App.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EventOccurances_ReservationId",
+                table: "EventOccurances",
+                column: "ReservationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReservationModels_MeetingRoomId",
+                table: "ReservationModels",
+                column: "MeetingRoomId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReservationModels_ReservationOwnerId",
+                table: "ReservationModels",
+                column: "ReservationOwnerId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -230,10 +296,16 @@ namespace LibRes.App.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "SampleModels");
+                name: "EventOccurances");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "ReservationModels");
+
+            migrationBuilder.DropTable(
+                name: "RoomModels");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

@@ -11,33 +11,22 @@ namespace LibRes.App.Data
         public static void CreateSeedData
         (this LibResDbContext context, UserManager<ApplicationUser> userManager)
         {
-            if (!context.SampleModels.Any())
+            if(!context.RoomModels.Any())
             {
-                var movies = new List<SampleModel>()
-               {
-                new SampleModel()
-                    {
-                         Name = "Avengers: Infinity War",
-                         Year = 2018
-                    },
-                    new SampleModel()
-                    {
-                         Name = "Thor: Ragnarock",
-                         Year = 2017
-                    },
-                new SampleModel()
-                    {
-                         Name = "Black Panther",
-                         Year = 2018
-                    }
-               };
-                context.AddRange(movies);
+                RoomModel sampleRoomModel = new RoomModel()
+                {
+                    RoomName = "Sample room 1"
+                };
+                context.AddRange(sampleRoomModel);
             }
 
+          
             if (userManager.FindByEmailAsync("abc@xyz.com").Result == null)
             {
                 ApplicationUser user = new ApplicationUser
                 {
+                    FirstName = "Pesho",
+                    LastName = "Peshev",
                     UserName = "abc@xyz.com",
                     Email = "abc@xyz.com",
                 };
@@ -51,6 +40,32 @@ namespace LibRes.App.Data
             }
 
             context.SaveChanges();
+
+            if (!context.ReservationModels.Any())
+            {
+                ReservationModel sampleReseravtion = new ReservationModel()
+                {
+                    EventName = "Techno party",
+                    EventDates = new HashSet<EventOccuranceModel>(),
+                    BeginHour = "92:00",
+                    EndHour = "14:00",
+                    MeetingRoom = context.RoomModels.First(),
+                    Department = "Kupon",
+                    ReservationOwner = userManager.FindByEmailAsync("abc@xyz.com").Result,
+                    WantsMultimedia = false
+                };
+
+                sampleReseravtion.EventDates = new HashSet<EventOccuranceModel>(){
+                    new EventOccuranceModel(){
+                        Reservation = sampleReseravtion,
+                        Occurance = new System.DateTime()
+                    }
+                };
+
+                context.AddRange(sampleReseravtion);
+                context.SaveChanges();
+            }
+
         }
     }
 }

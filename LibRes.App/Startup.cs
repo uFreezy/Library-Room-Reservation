@@ -1,10 +1,12 @@
-﻿using LibRes.App.Data;
+﻿using System;
+using LibRes.App.Data;
 using LibRes.App.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +23,7 @@ namespace LibRes.App
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             var connectionString = "Server=localhost;Database=LibRes;User Id=sa;Password=Libres123456!";
             services
@@ -35,15 +37,28 @@ namespace LibRes.App
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); 
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddIdentity<ApplicationUser, IdentityRole>().AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<LibResDbContext>()
           .AddDefaultTokenProviders();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            // Build the intermediate service provider
+            var serviceProvider = services.BuildServiceProvider();
+
+            //resolve implementations
+            LibResDbContext libResDbContext = serviceProvider
+                .GetService<LibResDbContext>();
+            UserManager<ApplicationUser> userManager = serviceProvider
+                .GetService<UserManager<ApplicationUser>>();
+                
+            return services.BuildServiceProvider();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env,LibResDbContext libResDbContext, UserManager<ApplicationUser> userManager)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -59,6 +74,14 @@ namespace LibRes.App
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();
+
+            //libResDbContext.CreateSeedData(userManager);
+
+            //resolve implementations
+            LibResDbContext libResDbContext = serviceProvider
+                .GetService<LibResDbContext>();
+            UserManager<ApplicationUser> userManager = serviceProvider
+                .GetService<UserManager<ApplicationUser>>();
 
             libResDbContext.CreateSeedData(userManager);
 

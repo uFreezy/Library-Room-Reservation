@@ -18,12 +18,13 @@
     <Folder Include="Data\" />
     <Folder Include="DbModels\" />
     <Folder Include="Views\Account\" />
-    <Folder Include="Migrations\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Migrations\20181017120316_InitialMigration.cs" />
     <Compile Remove="Migrations\20181017133934_Version3.cs" />
     <Compile Remove="Data\DbUserSeeder.cs" />
+    <Compile Remove="Migrations\20181017135147_Version.cs" />
+    <Compile Remove="DbModels\SampleModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Data\DbSeeder.cs">

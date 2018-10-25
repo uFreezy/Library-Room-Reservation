@@ -4,14 +4,16 @@ using LibRes.App.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LibRes.App.Migrations
 {
     [DbContext(typeof(LibResDbContext))]
-    partial class LibResDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181025090236_migration2")]
+    partial class migration2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,14 +103,6 @@ namespace LibRes.App.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(30);
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(30);
-
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
@@ -169,7 +163,7 @@ namespace LibRes.App.Migrations
                     b.ToTable("AspNetRoles");
 
                     b.HasData(
-                        new { Id = "557b2711-0d33-4059-a56c-b5bdb10b70d4", ConcurrencyStamp = "2e0cf1dc-286d-491d-b4c0-9299c3b46564", Name = "Admin", NormalizedName = "ADMIN" }
+                        new { Id = "8fc505ae-2ecb-4dde-b76b-74e49e6ae405", ConcurrencyStamp = "79bde5b7-010b-49f9-be7e-56c6db1de395", Name = "Admin", NormalizedName = "ADMIN" }
                     );
                 });
 
