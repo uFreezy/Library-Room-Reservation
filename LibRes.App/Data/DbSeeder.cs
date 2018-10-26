@@ -29,6 +29,8 @@ namespace LibRes.App.Data
                     LastName = "Peshev",
                     UserName = "abc@xyz.com",
                     Email = "abc@xyz.com",
+                    SecretQuestion = "Am I dead?",
+                    SecretAnswer = "Looks Like I am!"
                 };
 
                 IdentityResult result = userManager.CreateAsync(user, "Tapaka2000!").Result;

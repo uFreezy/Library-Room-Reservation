@@ -1,11 +1,9 @@
 ﻿using System.Diagnostics;
 using LibRes.App.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibRes.App.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
         public IActionResult Index()
@@ -35,7 +33,7 @@ namespace LibRes.App.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel 
+            return View(new ErrorViewModel
             { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }

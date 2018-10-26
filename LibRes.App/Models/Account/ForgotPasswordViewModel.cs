@@ -3,14 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LibRes.App.Models
 {
-    public class LoginModel
+    public class ForgotPasswordViewModel
     {
         [Required]
         [EmailAddress]
+        [Display(Name = "Email")]
         public string Email { get; set; }
-
-        [Required]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
     }
 }

@@ -30,12 +30,12 @@ namespace LibRes.App.DbModels
         }
 
         // TODO: Add regex validation to be sure that value is actually time.
-        [RegularExpression(@"(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]")]
+        //[RegularExpression(@"(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]")]
         [Required]
         public string BeginHour { get; set; }
 
         // TODO: Add regex validation to be sure that value is actually time.
-        [RegularExpression(@"^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$")]
+        //[RegularExpression(@"^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$")]
         [Required]
         public string EndHour { get; set; }
 

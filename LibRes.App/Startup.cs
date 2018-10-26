@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,11 +38,12 @@ namespace LibRes.App
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddIdentity<ApplicationUser, IdentityRole>().AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<LibResDbContext>()
           .AddDefaultTokenProviders();
+            services.AddMvc();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -53,7 +55,7 @@ namespace LibRes.App
                 .GetService<LibResDbContext>();
             UserManager<ApplicationUser> userManager = serviceProvider
                 .GetService<UserManager<ApplicationUser>>();
-                
+
             return services.BuildServiceProvider();
         }
 
@@ -74,8 +76,14 @@ namespace LibRes.App
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+                routes.MapSpaFallbackRoute(name: "spa-fallback", defaults: new { controller = "Home", action = "Error" });
 
-            //libResDbContext.CreateSeedData(userManager);
+            });
 
             //resolve implementations
             LibResDbContext libResDbContext = serviceProvider
@@ -85,12 +93,7 @@ namespace LibRes.App
 
             libResDbContext.CreateSeedData(userManager);
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+
         }
     }
 }
