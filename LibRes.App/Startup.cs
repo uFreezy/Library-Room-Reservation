@@ -26,7 +26,7 @@ namespace LibRes.App
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            var connectionString = "Server=localhost;Database=LibRes;User Id=sa;Password=Libres123456!";
+            var connectionString = "Server=.;Database=LibRes;User Id=UpdateMe;Password=A123456z";
             services
               .AddDbContext<LibResDbContext>(o =>
                                              o.UseSqlServer(connectionString));
@@ -84,7 +84,7 @@ namespace LibRes.App
                 routes.MapSpaFallbackRoute(name: "spa-fallback", defaults: new { controller = "Home", action = "Error" });
 
             });
-
+            
             //resolve implementations
             LibResDbContext libResDbContext = serviceProvider
                 .GetService<LibResDbContext>();
