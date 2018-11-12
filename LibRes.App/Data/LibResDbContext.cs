@@ -19,7 +19,7 @@ namespace LibRes.App.Data
              DbContextOptions<LibResDbContext> options)
              : base(options)
         {
-            this.Database.Migrate();
+
         }
 
         public LibResDbContext()
@@ -50,6 +50,13 @@ namespace LibRes.App.Data
             base.OnModelCreating(builder);
 
             builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = "Admin", NormalizedName = "Admin".ToUpper() });
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+
+        optionsBuilder.UseSqlServer("Server=localhost;Database=LibRes;User Id=sa;Password=Libres123456!");
+            
         }
 
     }

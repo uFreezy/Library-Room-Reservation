@@ -8,6 +8,10 @@ namespace LibRes.App.Controllers
     {
         public IActionResult Index()
         {
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
             return View();
         }
 

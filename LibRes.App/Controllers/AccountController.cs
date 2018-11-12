@@ -56,6 +56,7 @@ namespace LibRes.App.Controllers
                 {
                     return RedirectToAction("Index", "Home");
                 }
+                // TODO: Add error, not exception
                 throw new Exception("Invalid login attempt");
             }
             return View(model);
@@ -82,9 +83,10 @@ namespace LibRes.App.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+
             if (HttpContext.User.Identity.IsAuthenticated)
             {
-                RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");
             }
 
             return View();

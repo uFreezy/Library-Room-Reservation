@@ -40,13 +40,13 @@ namespace LibRes.App.DbModels
         public string EndHour { get; set; }
 
         [Required]
-        public RoomModel MeetingRoom { get; set; }
+        public virtual RoomModel MeetingRoom { get; set; }
 
         [Required]
         public string Department { get; set; }
 
         [Required]
-        public ApplicationUser ReservationOwner { get; set; }
+        public virtual ApplicationUser ReservationOwner { get; set; }
 
         [Required]
         public bool WantsMultimedia { get; set; }

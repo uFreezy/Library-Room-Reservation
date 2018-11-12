@@ -1,0 +1,54 @@
+﻿@model LibRes.App.Models.Calendar.CreateEventModel
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body form-froup">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.EventRepeatModel.RepeatOption, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        <select asp-for="EventRepeatModel.ExitStrategy" asp-items="Html.GetEnumSelectList(Model.EventRepeatModel.RepeatOption.GetType() )"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.EventRepeatModel.RepeatInterval, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(m => m.EventRepeatModel.RepeatInterval)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.EventRepeatModel.DaysOfTheWeek, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @for (int i = 0; i < Model.EventRepeatModel.DaysOfTheWeek.Count; i++)
+            {
+                var mod = Model.EventRepeatModel.DaysOfTheWeek[i];
+                @Html.Label(mod.DaysOfWeek.ToString())
+                @Html.CheckBoxFor(m => m.EventRepeatModel.DaysOfTheWeek[i].IsSelected);
+            @Html.HiddenFor(m => m.EventRepeatModel.DaysOfTheWeek[i].DaysOfWeek);
+
+}
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.EventRepeatModel.ExitStrategy, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        <select asp-for="EventRepeatModel.ExitStrategy" asp-items="Html.GetEnumSelectList(Model.EventRepeatModel.ExitStrategy.GetType() )"></select>
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

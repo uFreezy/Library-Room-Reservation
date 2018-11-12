@@ -177,7 +177,7 @@ namespace LibRes.App.Migrations
                     b.ToTable("AspNetRoles");
 
                     b.HasData(
-                        new { Id = "69abbd60-a665-43d3-809b-d0eab277a81d", ConcurrencyStamp = "0d93df2f-ffd5-463c-90c8-a420a68c59c4", Name = "Admin", NormalizedName = "ADMIN" }
+                        new { Id = "449738d0-3844-432a-834b-41489823dd8f", ConcurrencyStamp = "1ba5cebb-2fc8-4198-9173-19245e631d1b", Name = "Admin", NormalizedName = "ADMIN" }
                     );
                 });
 

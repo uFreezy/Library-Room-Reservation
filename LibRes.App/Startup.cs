@@ -1,6 +1,8 @@
 ﻿using System;
 using LibRes.App.Data;
 using LibRes.App.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -26,7 +28,7 @@ namespace LibRes.App
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            var connectionString = "Server=.;Database=LibRes;User Id=UpdateMe;Password=A123456z";
+            var connectionString = "Server=localhost;Database=LibRes;User Id=sa;Password=Libres123456!";
             services
               .AddDbContext<LibResDbContext>(o =>
                                              o.UseSqlServer(connectionString));
@@ -45,6 +47,8 @@ namespace LibRes.App
           .AddDefaultTokenProviders();
             services.AddMvc();
 
+
+            services.ConfigureApplicationCookie(options => options.LoginPath = "/login");
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // Build the intermediate service provider
@@ -76,6 +80,7 @@ namespace LibRes.App
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -84,7 +89,7 @@ namespace LibRes.App
                 routes.MapSpaFallbackRoute(name: "spa-fallback", defaults: new { controller = "Home", action = "Error" });
 
             });
-            
+
             //resolve implementations
             LibResDbContext libResDbContext = serviceProvider
                 .GetService<LibResDbContext>();
