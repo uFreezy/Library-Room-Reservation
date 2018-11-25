@@ -1,15 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using LibRes.App.Models.Calendar;
 
 namespace LibRes.App.Models.Calendar
 {
     public class CreateEventModel
     {
-
         [Required(ErrorMessage = "Event name is required.")]
         [Display(Name = "Name")]
-        public string EventName {get; set;}
+        public string EventName { get; set; }
 
         [Required]
         [Display(Name = "Beginning")]
@@ -29,14 +27,12 @@ namespace LibRes.App.Models.Calendar
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}")]
 
         public DateTime EventDate { get; set; }
-      
+
         public virtual EventRepeatViewModel EventRepeatModel { get; set; }
 
         public bool IsReoccuring { get; set; }
 
-        [Required]
-        [Display(Name = "Room")]
-        public string MeetingRoomId { get; set; }
+        [Required] [Display(Name = "Room")] public string MeetingRoomId { get; set; }
 
         [Required]
         [Display(Name = "Department")]
@@ -46,8 +42,6 @@ namespace LibRes.App.Models.Calendar
         [Display(Name = "Need Multimedia ?")]
         public bool WantsMultimedia { get; set; }
 
-        [Display(Name = "Description")]
-        public string Description { get; set; }
-
+        [Display(Name = "Description")] public string Description { get; set; }
     }
 }

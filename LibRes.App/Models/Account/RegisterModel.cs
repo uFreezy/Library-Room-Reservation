@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace LibRes.App.Models
 {
@@ -8,7 +7,7 @@ namespace LibRes.App.Models
         [Required]
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
-      
+
         [Required]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }

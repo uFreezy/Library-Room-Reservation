@@ -1,5 +1,3 @@
-using System;
-
 namespace LibRes.App.Models
 {
     public class ErrorViewModel

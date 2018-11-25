@@ -15,12 +15,9 @@ namespace LibRes.App.Models.Calendar
         [Display(Name = "Repeats every: ")]
         public int RepeatInterval { get; set; }
 
-        [Required]
-        public List<DaysOfWeekEnumModel> DaysOfTheWeek { get; set; }
+        [Required] public List<DaysOfWeekEnumModel> DaysOfTheWeek { get; set; }
 
-        [Required]
-        [Display(Name = "End :")]
-        public ExitStrategy ExitStrategy { get; set; }
+        [Required] [Display(Name = "End :")] public ExitStrategy ExitStrategy { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}")]

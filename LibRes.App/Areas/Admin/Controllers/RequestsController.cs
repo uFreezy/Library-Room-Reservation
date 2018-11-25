@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using LibRes.App.Data;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,7 +8,6 @@ namespace LibRes.App.Areas.Admin.Controllers
     [Route("admin")]
     public class RequestsController : Controller
     {
-
         private readonly LibResDbContext dbContext;
 
         public RequestsController(LibResDbContext dbContext)

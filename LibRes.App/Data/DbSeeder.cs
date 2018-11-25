@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using LibRes.App.DbModels;
 using LibRes.App.Models;
@@ -7,23 +8,23 @@ using Microsoft.AspNetCore.Identity;
 namespace LibRes.App.Data
 {
     public static class DbSeeder
-	{
+    {
         public static void CreateSeedData
-        (this LibResDbContext context, UserManager<ApplicationUser> userManager)
+            (this LibResDbContext context, UserManager<ApplicationUser> userManager)
         {
-            if(!context.RoomModels.Any())
+            if (!context.RoomModels.Any())
             {
-                RoomModel sampleRoomModel = new RoomModel()
+                var sampleRoomModel = new RoomModel
                 {
                     RoomName = "Sample room 1"
                 };
                 context.AddRange(sampleRoomModel);
             }
 
-          
+
             if (userManager.FindByEmailAsync("abc@xyz.com").Result == null)
             {
-                ApplicationUser user = new ApplicationUser
+                var user = new ApplicationUser
                 {
                     FirstName = "Pesho",
                     LastName = "Peshev",
@@ -33,19 +34,16 @@ namespace LibRes.App.Data
                     SecretAnswer = "Looks Like I am!"
                 };
 
-                IdentityResult result = userManager.CreateAsync(user, "Tapaka2000!").Result;
+                var result = userManager.CreateAsync(user, "Tapaka2000!").Result;
 
-                if (result.Succeeded)
-                {
-                    userManager.AddToRoleAsync(user, "Admin").Wait();
-                }
+                if (result.Succeeded) userManager.AddToRoleAsync(user, "Admin").Wait();
             }
 
             context.SaveChanges();
 
             if (!context.ReservationModels.Any())
             {
-                ReservationModel sampleReseravtion = new ReservationModel()
+                var sampleReseravtion = new ReservationModel
                 {
                     EventName = "Techno party",
                     EventDates = new HashSet<EventOccuranceModel>(),
@@ -57,19 +55,19 @@ namespace LibRes.App.Data
                     WantsMultimedia = false
                 };
 
-                sampleReseravtion.EventDates = new HashSet<EventOccuranceModel>(){
-                    new EventOccuranceModel(){
+                sampleReseravtion.EventDates = new HashSet<EventOccuranceModel>
+                {
+                    new EventOccuranceModel
+                    {
                         Reservation = sampleReseravtion,
-                        Occurance = System.DateTime.Now
+                        Occurance = DateTime.Now
                     }
                 };
 
-                
 
                 context.AddRange(sampleReseravtion);
                 context.SaveChanges();
             }
-
         }
     }
 }

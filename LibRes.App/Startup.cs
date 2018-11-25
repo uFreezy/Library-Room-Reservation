@@ -1,15 +1,12 @@
 ﻿using System;
 using LibRes.App.Data;
 using LibRes.App.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,10 +25,11 @@ namespace LibRes.App
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            var connectionString = "Server=tcp:librestest.database.windows.net,1433;Initial Catalog=LibResTest;Persist Security Info=False;User ID=libresmanager;Password=Libres123456!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-                services
-              .AddDbContext<LibResDbContext>(o =>
-                                             o.UseSqlServer(connectionString));
+            var connectionString =
+                "Server=tcp:librestest.database.windows.net,1433;Initial Catalog=LibResTest;Persist Security Info=False;User ID=libresmanager;Password=Libres123456!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+            services
+                .AddDbContext<LibResDbContext>(o =>
+                    o.UseSqlServer(connectionString));
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -43,8 +41,8 @@ namespace LibRes.App
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddIdentity<ApplicationUser, IdentityRole>().AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<LibResDbContext>()
-          .AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<LibResDbContext>()
+                .AddDefaultTokenProviders();
             services.AddMvc();
 
 
@@ -55,9 +53,9 @@ namespace LibRes.App
             var serviceProvider = services.BuildServiceProvider();
 
             //resolve implementations
-            LibResDbContext libResDbContext = serviceProvider
+            var libResDbContext = serviceProvider
                 .GetService<LibResDbContext>();
-            UserManager<ApplicationUser> userManager = serviceProvider
+            var userManager = serviceProvider
                 .GetService<UserManager<ApplicationUser>>();
 
             return services.BuildServiceProvider();
@@ -86,22 +84,19 @@ namespace LibRes.App
                 routes.MapRoute("areaRoute", "{area:exists}/{controller=Admin}/{action=Index}/{id?}");
 
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-                routes.MapSpaFallbackRoute(name: "spa-fallback", defaults: new { controller = "Home", action = "Error" });
-
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}");
+                routes.MapSpaFallbackRoute("spa-fallback", new {controller = "Home", action = "Error"});
             });
 
-         
+
             //resolve implementations
-            LibResDbContext libResDbContext = serviceProvider
+            var libResDbContext = serviceProvider
                 .GetService<LibResDbContext>();
-            UserManager<ApplicationUser> userManager = serviceProvider
+            var userManager = serviceProvider
                 .GetService<UserManager<ApplicationUser>>();
 
             libResDbContext.CreateSeedData(userManager);
-
-
         }
     }
 }

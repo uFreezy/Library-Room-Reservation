@@ -13,11 +13,11 @@ namespace LibRes.App.ViewComponents
         {
             // WARNING: Shitty code 
 
-            CreateEventModel model = new CreateEventModel
+            var model = new CreateEventModel
             {
                 EventRepeatModel = new EventRepeatViewModel
                 {
-                    RepeatOption = EventRepeatOptions.WEEKLY,
+                    RepeatOption = EventRepeatOptions.Weekly,
                     DaysOfTheWeek = new List<DaysOfWeekEnumModel>(),
                     ExitDate = DateTime.Now.AddYears(1)
                 }
@@ -25,14 +25,12 @@ namespace LibRes.App.ViewComponents
 
 
             foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
-            {
                 model.EventRepeatModel.DaysOfTheWeek
-                   .Add(new DaysOfWeekEnumModel()
-                   {
-                       DaysOfWeek = day,
-                       IsSelected = false
-                   });
-            }
+                    .Add(new DaysOfWeekEnumModel
+                    {
+                        DaysOfWeek = day,
+                        IsSelected = false
+                    });
 
             return View("~/Views/Calendar/_EventRepeatModal.cshtml", model);
         }

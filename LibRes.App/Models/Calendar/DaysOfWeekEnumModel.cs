@@ -1,5 +1,4 @@
 ﻿using System;
-using LibRes.App.Models.Enums;
 
 namespace LibRes.App.Models.Calendar
 {
@@ -7,6 +6,5 @@ namespace LibRes.App.Models.Calendar
     {
         public DayOfWeek DaysOfWeek { get; set; }
         public bool IsSelected { get; set; }
-
     }
 }

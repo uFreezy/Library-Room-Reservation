@@ -1,5 +1,4 @@
-﻿using System;
-namespace LibRes.App.Models.Enums
+﻿namespace LibRes.App.Models.Enums
 {
     public enum ExitStrategy
     {

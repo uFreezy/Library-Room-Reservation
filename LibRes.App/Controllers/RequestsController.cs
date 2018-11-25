@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using LibRes.App.Data;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,16 +6,16 @@ namespace LibRes.App.Controllers
 {
     public class RequestsController : Controller
     {
-        private readonly LibResDbContext dbContext;
+        private readonly LibResDbContext _dbContext;
 
         public RequestsController(LibResDbContext dbContext)
         {
-            this.dbContext = dbContext;
+            _dbContext = dbContext;
         }
 
         public IActionResult Index()
         {
-            return View(dbContext.ReservationModels.ToList());
+            return View(_dbContext.ReservationModels.ToList());
         }
     }
 }

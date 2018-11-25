@@ -2,22 +2,17 @@
 <!-- Modal -->
 <style>
     /* TODO: MOVE THEM OUTSIDE .cshtml FILE*/
-    #date-tb > thead > tr, #date-tb > tbody > tr  {
-        width: 100%;
+    #date-tb > thead > tr, #date-tb > tbody > tr {
         display: inline-table;
         table-layout: fixed;
+        width: 100%;
     }
 
-    #date-tb {
-        height: 300px;
-        // <-- Select the height of the table display: -moz-groupbox;
-        // Firefox Bad Effect
-    }
+    #date-tb { height: 300px; }
 
     #date-tb > tbody {
-        overflow-y: scroll;
         height: 200px;
-        // <-- Select the height of the body width: 100%;
+        overflow-y: scroll;
         position: absolute;
     }
 </style>
@@ -37,7 +32,7 @@
                 </p>
                 <p>
                     @Html.LabelFor(m => m.InitialDate)
-                    @Html.DisplayFor(m=> m.InitialDate)
+                    @Html.DisplayFor(m => m.InitialDate)
                 </p>
                 <p>
                     @Html.LabelFor(m => m.BeginHour)
@@ -47,26 +42,26 @@
                     @Html.LabelFor(m => m.EndHour)
                     @Html.DisplayFor(m => m.EndHour)
                 </p>
-                @if(Model.RepeatDates.Any())
+                @if (Model.RepeatDates.Any())
                 {
                     <p>
                         <table class="table" id="date-tb">
                             <thead>
-                                <tr>
-                                    <th>@Html.LabelFor(m=> m.RepeatDates)</th>
-                                </tr>
+                            <tr>
+                                <th>@Html.LabelFor(m => m.RepeatDates)</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                @foreach(DateTime date in Model.RepeatDates)
-                                {
-                                    <tr>
-                                        <td>@(date.ToString("dd/MM/yyyy"))</td>
-                                    </tr>
-                                }
+                            @foreach (var date in Model.RepeatDates)
+                            {
+                                <tr>
+                                    <td>@(date.ToString("dd/MM/yyyy"))</td>
+                                </tr>
+                            }
 
                             </tbody>
                         </table>
-                        
+
                     </p>
                 }
                 <p>
@@ -83,14 +78,14 @@
                 </p>
                 <p>
                     @Html.LabelFor(m => m.WantsMultimedia)
-                    @(Model.WantsMultimedia ? "Yes":"No")
+                    @(Model.WantsMultimedia ? "Yes" : "No")
                 </p>
                 @if (Model.Description != null)
                 {
-                <p>
-                    @Html.LabelFor(m => m.Description) 
-                    @Html.DisplayFor(m => m.Description)
-                </p>
+                    <p>
+                        @Html.LabelFor(m => m.Description)
+                        @Html.DisplayFor(m => m.Description)
+                    </p>
                 }
             </div>
             <div class="modal-footer">

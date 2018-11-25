@@ -8,39 +8,33 @@ namespace LibRes.App.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        private string _secretAnswer;
         private ICollection<ReservationModel> _reservations;
+        private string _secretAnswer;
 
         public ApplicationUser()
         {
-            this._reservations = new HashSet<ReservationModel>();
+            _reservations = new HashSet<ReservationModel>();
         }
 
-        [Required]
-        [MaxLength(30)]
-        public string FirstName { get; set; }
+        [Required] [MaxLength(30)] public string FirstName { get; set; }
 
-        [Required]
-        [MaxLength(30)]
-        public string LastName { get; set; }
+        [Required] [MaxLength(30)] public string LastName { get; set; }
 
-        [Required]
-        [MaxLength(100)]
-        public string SecretQuestion { get; set; }
+        [Required] [MaxLength(100)] public string SecretQuestion { get; set; }
 
         [Required]
         [MaxLength(100)]
         // TODO: Find a way to encrypt and decrypt it so we don't keep it as a plain string.
-        public string SecretAnswer 
+        public string SecretAnswer
         {
-            get { return this._secretAnswer; }
-            set { this._secretAnswer = EncryptionUtil.Encrypt(value); }
+            get => _secretAnswer;
+            set => _secretAnswer = EncryptionUtil.Encrypt(value);
         }
 
         public virtual ICollection<ReservationModel> Reservations
         {
-            get { return this._reservations; }
-            set { this._reservations = value; }
+            get => _reservations;
+            set => _reservations = value;
         }
 
         /*
@@ -51,11 +45,10 @@ namespace LibRes.App.Models
          * non-encrypet value.
         */
         [NotMapped]
-        public string SecrectAnswerDecrypted 
+        public string SecrectAnswerDecrypted
         {
-            get { return EncryptionUtil.Decrypt(_secretAnswer); }
-            private set { this._secretAnswer = EncryptionUtil.Encrypt(value); }
-
+            get => EncryptionUtil.Decrypt(_secretAnswer);
+            private set => _secretAnswer = EncryptionUtil.Encrypt(value);
         }
     }
 }

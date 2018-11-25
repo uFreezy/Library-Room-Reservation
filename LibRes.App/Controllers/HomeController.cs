@@ -8,10 +8,7 @@ namespace LibRes.App.Controllers
     {
         public IActionResult Index()
         {
-            if (!HttpContext.User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Login", "Account");
-            }
+            if (!HttpContext.User.Identity.IsAuthenticated) return RedirectToAction("Login", "Account");
             return View();
         }
 
@@ -38,7 +35,7 @@ namespace LibRes.App.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel
-            { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+                {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
         }
     }
 }
