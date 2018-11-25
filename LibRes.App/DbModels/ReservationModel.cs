@@ -23,30 +23,26 @@ namespace LibRes.App.DbModels
         public string EventName { get; set; }
 
         [Required]
-        public virtual ICollection<EventOccuranceModel> EventDates 
+        public  ICollection<EventOccuranceModel> EventDates 
         { 
             get { return this._eventDates; }
             set { this._eventDates = value; }
         }
 
-        // TODO: Add regex validation to be sure that value is actually time.
-        //[RegularExpression(@"(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]")]
         [Required]
         public string BeginHour { get; set; }
 
-        // TODO: Add regex validation to be sure that value is actually time.
-        //[RegularExpression(@"^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$")]
         [Required]
         public string EndHour { get; set; }
 
         [Required]
-        public virtual RoomModel MeetingRoom { get; set; }
+        public  RoomModel MeetingRoom { get; set; }
 
         [Required]
         public string Department { get; set; }
 
         [Required]
-        public virtual ApplicationUser ReservationOwner { get; set; }
+        public ApplicationUser ReservationOwner { get; set; }
 
         [Required]
         public bool WantsMultimedia { get; set; }

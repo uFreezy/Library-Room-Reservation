@@ -19,7 +19,6 @@ namespace LibRes.App.Data
              DbContextOptions<LibResDbContext> options)
              : base(options)
         {
-
         }
 
         public LibResDbContext()
@@ -28,14 +27,14 @@ namespace LibRes.App.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<ApplicationUser>()
+           /* builder.Entity<ApplicationUser>()
                    .HasMany<ReservationModel>(a => a.Reservations)
                    .WithOne(r => r.ReservationOwner);
 
 
             builder.Entity<ReservationModel>()
                    .HasMany<EventOccuranceModel>(r => r.EventDates)
-                   .WithOne(e => e.Reservation);
+                   .WithOne(e => e.Reservation);*/
 
            /*modelBuilder.Entity<Contest>()
                   .HasMany<User>(c => c.Participants)
@@ -55,7 +54,7 @@ namespace LibRes.App.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 
-        optionsBuilder.UseSqlServer("Server=localhost;Database=LibRes;User Id=sa;Password=Libres123456!");
+            optionsBuilder.UseSqlServer("Server=tcp:librestest.database.windows.net,1433;Initial Catalog=LibResTest;Persist Security Info=False;User ID=libresmanager;Password=Libres123456!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             
         }
 

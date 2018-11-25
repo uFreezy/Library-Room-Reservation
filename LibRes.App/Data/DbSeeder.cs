@@ -49,7 +49,7 @@ namespace LibRes.App.Data
                 {
                     EventName = "Techno party",
                     EventDates = new HashSet<EventOccuranceModel>(),
-                    BeginHour = "92:00",
+                    BeginHour = "12:00",
                     EndHour = "14:00",
                     MeetingRoom = context.RoomModels.First(),
                     Department = "Kupon",
@@ -60,9 +60,11 @@ namespace LibRes.App.Data
                 sampleReseravtion.EventDates = new HashSet<EventOccuranceModel>(){
                     new EventOccuranceModel(){
                         Reservation = sampleReseravtion,
-                        Occurance = new System.DateTime()
+                        Occurance = System.DateTime.Now
                     }
                 };
+
+                
 
                 context.AddRange(sampleReseravtion);
                 context.SaveChanges();

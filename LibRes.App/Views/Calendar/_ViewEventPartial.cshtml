@@ -1,0 +1,106 @@
+﻿@model LibRes.App.Models.Calendar.EventSingleView
+<!-- Modal -->
+<style>
+    /* TODO: MOVE THEM OUTSIDE .cshtml FILE*/
+    #date-tb > thead > tr, #date-tb > tbody > tr  {
+        width: 100%;
+        display: inline-table;
+        table-layout: fixed;
+    }
+
+    #date-tb {
+        height: 300px;
+        // <-- Select the height of the table display: -moz-groupbox;
+        // Firefox Bad Effect
+    }
+
+    #date-tb > tbody {
+        overflow-y: scroll;
+        height: 200px;
+        // <-- Select the height of the body width: 100%;
+        position: absolute;
+    }
+</style>
+<div class="modal" id="eventInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Event</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    @Html.LabelFor(m => m.EventName)
+                    @Html.DisplayFor(m => m.EventName)
+                </p>
+                <p>
+                    @Html.LabelFor(m => m.InitialDate)
+                    @Html.DisplayFor(m=> m.InitialDate)
+                </p>
+                <p>
+                    @Html.LabelFor(m => m.BeginHour)
+                    @Html.DisplayFor(m => m.BeginHour)
+                </p>
+                <p>
+                    @Html.LabelFor(m => m.EndHour)
+                    @Html.DisplayFor(m => m.EndHour)
+                </p>
+                @if(Model.RepeatDates.Any())
+                {
+                    <p>
+                        <table class="table" id="date-tb">
+                            <thead>
+                                <tr>
+                                    <th>@Html.LabelFor(m=> m.RepeatDates)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(DateTime date in Model.RepeatDates)
+                                {
+                                    <tr>
+                                        <td>@(date.ToString("dd/MM/yyyy"))</td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                        
+                    </p>
+                }
+                <p>
+                    @Html.LabelFor(m => m.MeetingRoom)
+                    @Html.DisplayFor(m => m.MeetingRoom)
+                </p>
+                <p>
+                    @Html.LabelFor(m => m.Department)
+                    @Html.DisplayFor(m => m.Department)
+                </p>
+                <p>
+                    @Html.LabelFor(m => m.ReservationOwner)
+                    @Html.DisplayFor(m => m.ReservationOwner)
+                </p>
+                <p>
+                    @Html.LabelFor(m => m.WantsMultimedia)
+                    @(Model.WantsMultimedia ? "Yes":"No")
+                </p>
+                @if (Model.Description != null)
+                {
+                <p>
+                    @Html.LabelFor(m => m.Description) 
+                    @Html.DisplayFor(m => m.Description)
+                </p>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" rel="tooltip" class="btn btn-success">
+                    <i class="material-icons">edit</i>
+                </button>
+                <button type="button" rel="tooltip" class="btn btn-danger">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

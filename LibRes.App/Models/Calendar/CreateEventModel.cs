@@ -6,7 +6,8 @@ namespace LibRes.App.Models.Calendar
 {
     public class CreateEventModel
     {
-        [Required]
+
+        [Required(ErrorMessage = "Event name is required.")]
         [Display(Name = "Name")]
         public string EventName {get; set;}
 
@@ -25,12 +26,12 @@ namespace LibRes.App.Models.Calendar
         [Required]
         [DataType(DataType.Date)]
         [Display(Name = "Date")]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}")]
+
         public DateTime EventDate { get; set; }
+      
+        public virtual EventRepeatViewModel EventRepeatModel { get; set; }
 
-        public EventRepeatViewModel EventRepeatModel { get; set; }
-
-
-        // TODO: Remove
         public bool IsReoccuring { get; set; }
 
         [Required]

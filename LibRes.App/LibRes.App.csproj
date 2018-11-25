@@ -5,15 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="jquery.datatables" Version="1.10.11" />
-    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="jquery.datatables" Version="1.10.15" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.1.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.4" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.6" />
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +26,8 @@
     <Folder Include="Models\Enums\" />
     <Folder Include="Views\Calendar\" />
     <Folder Include="Models\Calendar\" />
+    <Folder Include="ViewComponents\" />
+    <Folder Include="Areas\Admin\Views\New Folder\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Migrations\20181017120316_InitialMigration.cs" />
@@ -33,6 +36,9 @@
     <Compile Remove="Migrations\20181017135147_Version.cs" />
     <Compile Remove="DbModels\SampleModel.cs" />
     <Compile Remove="Migrations\20181025090236_migration2.cs" />
+    <Compile Remove="Views\Calendar\_EventRepeatModal.cs" />
+    <Compile Remove="Attributes\DateValidation.cd" />
+    <Compile Remove="Attributes\CheckAjaxRequestAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Data\DbSeeder.cs">
@@ -46,10 +52,6 @@
   <ItemGroup>
     <Content Update="Views\Requests\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
-    <Content Update="Views\Calendar\_EventRepeatModal.cshtml">
-      <Generator>RazorTemplatePreprocessor</Generator>
-      <LastGenOutput>_EventRepeatModal.cs</LastGenOutput>
     </Content>
   </ItemGroup>
 </Project>

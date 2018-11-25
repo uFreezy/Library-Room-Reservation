@@ -28,8 +28,8 @@ namespace LibRes.App
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            var connectionString = "Server=localhost;Database=LibRes;User Id=sa;Password=Libres123456!";
-            services
+            var connectionString = "Server=tcp:librestest.database.windows.net,1433;Initial Catalog=LibResTest;Persist Security Info=False;User ID=libresmanager;Password=Libres123456!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+                services
               .AddDbContext<LibResDbContext>(o =>
                                              o.UseSqlServer(connectionString));
 
@@ -83,6 +83,8 @@ namespace LibRes.App
 
             app.UseMvc(routes =>
             {
+                routes.MapRoute("areaRoute", "{area:exists}/{controller=Admin}/{action=Index}/{id?}");
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
@@ -90,6 +92,7 @@ namespace LibRes.App
 
             });
 
+         
             //resolve implementations
             LibResDbContext libResDbContext = serviceProvider
                 .GetService<LibResDbContext>();

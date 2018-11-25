@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using LibRes.App.Data;
 using LibRes.App.DbModels;
-using LibRes.App.Models;
 using LibRes.App.Models.Calendar;
 using LibRes.App.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace LibRes.App.Controllers
 {
@@ -21,15 +21,66 @@ namespace LibRes.App.Controllers
         public IActionResult ViewEvent(int eventId)
         {
 
-            // NOTE: Subject to change, most likely the view will be partial.
+            // NOTE: Delete probably
             return View();
         }
 
         [HttpGet]
-        [Route("/events")]
-        public IActionResult ViewEvents(DateTime from, DateTime to)
+        public PartialViewResult ViewEventPartial(int eventId)
         {
-            return View();
+            EventSingleView res = Context.ReservationModels
+                                         .Include(r => r.EventDates)
+                                          .Include(r => r.MeetingRoom)
+                                          .Include(r => r.ReservationOwner)
+                                         .Where(r => r.Id == eventId)
+                                         .Select(r => new EventSingleView{
+                EventName = r.EventName,
+                InitialDate = r.EventDates.First().Occurance,
+                RepeatDates = r.EventDates
+                               .Where(d=> d.Id != r.EventDates.First().Id)
+                               .Select(d => d.Occurance).ToList(),
+                BeginHour = r.BeginHour,
+                EndHour = r.EndHour,
+                MeetingRoom = r.MeetingRoom.RoomName,
+                Department = r.Department,
+                ReservationOwner = r.ReservationOwner.Email,
+                WantsMultimedia = r.WantsMultimedia
+            }).FirstOrDefault();
+
+
+            return PartialView("_ViewEventPartial", res);
+        }
+
+        [HttpGet]
+        [Route("/events")]
+        public IActionResult ViewEvents()
+        {
+            // TEMP: Currently used for testing.
+            DateTime from = DateTime.MinValue;
+            DateTime to = DateTime.MaxValue;
+            List<EventOccuranceModel> eventOccurances = Context.EventOccurances
+                                                               .Include(o => o.Reservation)
+                                                               .Where(o => o.Occurance >= from && o.Occurance <= to)
+                                                               .ToList();
+
+
+            List<EventShortView> parsedEvents = new List<EventShortView>();
+
+            foreach (EventOccuranceModel occ in eventOccurances)
+            {
+                parsedEvents.Add(new EventShortView
+                {
+                    Id = occ.Reservation.Id,
+                    Name = occ.Reservation.EventName,
+                    BeginDate = occ.Occurance.ToString("yyyy-MM-dd") + "T" + occ.Reservation.BeginHour+":00",
+                    EndDate = occ.Occurance.ToString("yyyy-MM-dd") + "T" + occ.Reservation.EndHour+":00"
+                });
+            }
+
+            string eventsJson = JsonConvert.SerializeObject(parsedEvents);
+
+            return View("ViewEvents", eventsJson);
+
         }
 
 
@@ -39,7 +90,6 @@ namespace LibRes.App.Controllers
         {
             // Selects the Available rooms ids and names to display
             // in a dropdown.
-            var libResDbContext = new LibResDbContext();
             IEnumerable<SelectListItem> rooms = this.Context
                                                     .RoomModels
                                                     .Select(r => new SelectListItem
@@ -50,37 +100,50 @@ namespace LibRes.App.Controllers
             });
             ViewBag.Rooms = rooms;
 
-            // WARNING: Shitty code 
-            CreateEventModel cem = new CreateEventModel
+
+            CreateEventModel model = new CreateEventModel
             {
-                EventRepeatModel = new EventRepeatViewModel()
+                BeginHour = DateTime.Now,
+                EndHour = DateTime.Now.AddHours(1),
+                EventDate = DateTime.Now
             };
-            cem.EventRepeatModel.DaysOfTheWeek = new List<DaysOfWeekEnumModel>();
 
-            foreach (DaysOfTheWeek day in Enum.GetValues(typeof(DaysOfTheWeek)))
-            {
-                cem.EventRepeatModel.DaysOfTheWeek
-                   .Add(new DaysOfWeekEnumModel() { 
-                    DaysOfWeek = day, 
-                    IsSelected = false 
-                });
-            }
-
-            return View(cem);
+            return View(model);
         }
 
 
+  
         [HttpPost("/create")]
         [ValidateAntiForgeryToken]
         public IActionResult CreateEvent(CreateEventModel model)
         {
             if(ModelState.IsValid){
 
+                // Does not allow to create event in the past.
+                if(model.EventDate < DateTime.Now)
+                {
+                    ModelState.AddModelError("EventDate", "Date cannot be set to past date!");
+
+                    // Selects the Available rooms ids and names to display
+                    // in a dropdown.
+
+                    //Temp
+                    ViewBag.Rooms = this.Context.RoomModels
+                        .Select(r => new SelectListItem
+                        {
+                            Value = r.Id.ToString(),
+                            Text = r.RoomName
+
+                        });
+               
+                    return View(model);
+                }
+
                 ReservationModel reservation = new ReservationModel
                 {
                     EventName = model.EventName,
-                    BeginHour = model.BeginHour.ToString(),
-                    EndHour = model.EndHour.ToString(),
+                    BeginHour = model.BeginHour.Hour.ToString() +':'+ model.BeginHour.Minute.ToString(),
+                    EndHour = model.EndHour.Hour.ToString() +':'+ model.EndHour.Minute.ToString(),
                     EventDates = new HashSet<EventOccuranceModel>(),
                     MeetingRoom = this.Context.RoomModels
                                       .FirstOrDefault(r => r.Id.ToString() == model.MeetingRoomId),
@@ -90,45 +153,129 @@ namespace LibRes.App.Controllers
                     Description = model.Description
                 };
 
-              /*  if(model.IsReoccuring)
+                // Adds initial date.
+                reservation.EventDates.Add(new EventOccuranceModel
                 {
-                    for (int i = 0; i < model.EventRepeatModel.RepeatInterval; i++)
-                    {
-                        if (model.EventRepeatModel.RepeatOption == EventRepeatOptions.WEEKLY){
-                            //reservation.EventDates.Add(new DateTime())
-                            reservation.EventDates.Add(new EventOccuranceModel()
-                            {
-                                Occurance = new DateTime(model.EventDate.Day),
-                                Reservation = reservation
-                            });
-                        } else 
-                        {
-
-                        }
-                    }
-                }*/
-
-              
-
-                // TODO: Handle multiple ocurances 
-                reservation.EventDates.Add(new EventOccuranceModel{
                     Occurance = model.EventDate,
                     Reservation = reservation
                 });
 
+                if (model.IsReoccuring)
+                {
+                    this.SetDateOccurances(model, reservation);
+                }
+
+
                 Context.AddRange(reservation);
                 Context.SaveChanges();
 
-                //TODO: Create view 
                 return RedirectToAction("ViewEvents", "Calendar");
             }
 
+            // Temp
+            IEnumerable<SelectListItem> rooms = this.Context
+                                                  .RoomModels
+                                                  .Select(r => new SelectListItem
+                                                  {
+                                                      Value = r.Id.ToString(),
+                                                      Text = r.RoomName
+
+                                                  });
+            ViewBag.Rooms = rooms;
+            return View(model);
+        }
+
+        public IActionResult EditEvent(int eventId){
+            // TODO
             return View();
         }
 
-        public IActionResult EditEvent(){
-            // Maybe we can use the same form as create ?
-            return View();
+        [NonAction]
+        private List<DayOfWeek> SelectedDays(List<DaysOfWeekEnumModel> daysOfWeekInp)
+        {
+            List<DayOfWeek> selectedDays = new List<DayOfWeek>();
+
+            foreach (var day in daysOfWeekInp)
+            {
+                if(day.IsSelected)
+                {
+                    selectedDays.Add(day.DaysOfWeek);
+                }
+            }
+
+            selectedDays.Reverse();
+
+            return selectedDays;
+        }
+
+        [NonAction]
+        private DateTime GetNextMonday(DateTime date)
+        {
+            int daysUntil = ((int)date.DayOfWeek - (int)DayOfWeek.Monday + 7) % 7;
+            DateTime nextOccurance = date.AddDays(daysUntil-1);
+
+            return nextOccurance;
+        }
+        [NonAction]
+        private DateTime GetNextWeekday(DateTime start, DayOfWeek day)
+        {
+            // The (... + 7) % 7 ensures we end up with a value in the range [0, 6]
+            int daysToAdd = ((int)day - (int)start.DayOfWeek + 7) % 7;
+            if (daysToAdd == 0) return start.AddDays(7);
+            return start.AddDays(daysToAdd);
+        }
+
+
+        [NonAction]
+        private void SetDateOccurances(CreateEventModel model, ReservationModel reservation)
+        {
+            DateTime beginDate = model.EventDate;
+
+            bool isWeekly = model.EventRepeatModel.RepeatOption == EventRepeatOptions.WEEKLY;
+            bool isMonthly = model.EventRepeatModel.RepeatOption == EventRepeatOptions.MONTHLY;
+
+            DateTime currentWeek = isWeekly
+                ? this.GetNextMonday(model.EventDate)
+                                         .AddDays((model.EventRepeatModel.RepeatInterval - 1) * 7)
+                : model.EventDate.AddMonths(model.EventRepeatModel.RepeatInterval);
+
+            /*
+                If its weekly, get next week's monday and add the repat interval to get next date.
+                If its monthly just add one month.
+            */
+
+            DateTime lastUpdated = DateTime.MinValue;
+
+            DateTime quitDate = model.EventRepeatModel.ExitStrategy == ExitStrategy.FIXED_DATE ? model.EventRepeatModel.ExitDate : beginDate.AddYears(1);
+            while (currentWeek < quitDate)
+            {
+                List<DayOfWeek> selectedDays = this.SelectedDays(model.EventRepeatModel.DaysOfTheWeek);
+
+                if (isWeekly && currentWeek < lastUpdated.AddDays((model.EventRepeatModel.RepeatInterval * 7) - 7))
+                {
+                    currentWeek = currentWeek.AddDays(7);
+                    continue;
+                }
+                else if (isMonthly && currentWeek < lastUpdated.AddMonths(1))
+                {
+                    currentWeek = currentWeek.AddMonths(1);
+                    continue;
+                }
+
+                foreach (var day in selectedDays)
+                {
+                    DateTime nextOccurance = GetNextWeekday(currentWeek, day);
+
+                    reservation.EventDates.Add(new EventOccuranceModel
+                    {
+                        Occurance = nextOccurance,
+                        Reservation = reservation
+                    });
+
+                    currentWeek = nextOccurance;
+                    lastUpdated = nextOccurance;
+                }
+            }
         }
 
     }

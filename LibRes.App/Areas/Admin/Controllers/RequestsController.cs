@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LibRes.App.Areas.Admin.Controllers
 {
     [Area("Admin")]
-
+    [Route("admin")]
     public class RequestsController : Controller
     {
 

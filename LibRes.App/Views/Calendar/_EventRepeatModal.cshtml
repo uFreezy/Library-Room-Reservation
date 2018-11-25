@@ -11,9 +11,10 @@
             </div>
             <div class="modal-body form-froup">
                 <div class="form-group">
+                    @Html.HiddenFor(model => model.EventRepeatModel.RepeatOption, new { @value = 1 })
                     @Html.LabelFor(m => m.EventRepeatModel.RepeatOption, new { @class = "col-md-2 control-label" })
                     <div class="col-md-10">
-                        <select asp-for="EventRepeatModel.ExitStrategy" asp-items="Html.GetEnumSelectList(Model.EventRepeatModel.RepeatOption.GetType() )"></select>
+                        <select asp-for="EventRepeatModel.RepeatOption" asp-items="Html.GetEnumSelectList(Model.EventRepeatModel.RepeatOption.GetType() )"></select>
                     </div>
                 </div>
                 <div class="form-group">
@@ -26,13 +27,13 @@
                     @Html.LabelFor(m => m.EventRepeatModel.DaysOfTheWeek, new { @class = "col-md-2 control-label" })
                     <div class="col-md-10">
                         @for (int i = 0; i < Model.EventRepeatModel.DaysOfTheWeek.Count; i++)
-            {
-                var mod = Model.EventRepeatModel.DaysOfTheWeek[i];
-                @Html.Label(mod.DaysOfWeek.ToString())
-                @Html.CheckBoxFor(m => m.EventRepeatModel.DaysOfTheWeek[i].IsSelected);
-            @Html.HiddenFor(m => m.EventRepeatModel.DaysOfTheWeek[i].DaysOfWeek);
+                        {
+                            var mod = Model.EventRepeatModel.DaysOfTheWeek[i];
+                            @Html.Label(mod.DaysOfWeek.ToString())
+                            @Html.CheckBoxFor(m => m.EventRepeatModel.DaysOfTheWeek[i].IsSelected);
+                            @Html.HiddenFor(m => m.EventRepeatModel.DaysOfTheWeek[i].DaysOfWeek);
 
-}
+                        }
                     </div>
                 </div>
                 <div class="form-group">
@@ -42,7 +43,17 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    @Html.LabelFor(m => m.EventRepeatModel.ExitDate, new
+    {
+        @class = "col-md-2 control-label",
+        min = "@DateTime.Now.ToString(\"dd-MM-yyyy\")",
+        @Value = @DateTime.Now.AddYears(1).ToString("dd-MM-yyyy")})
 
+                    <div class="col-md-10">
+                        @Html.EditorFor(m => m.EventRepeatModel.ExitDate)
+                    </div>
+                </div>
 
             </div>
             <div class="modal-footer">
