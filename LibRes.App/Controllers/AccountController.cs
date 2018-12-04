@@ -9,7 +9,7 @@ namespace LibRes.App.Controllers
 {
     /// <inheritdoc />
     /// <summary>
-    ///     Controller that handles all User opperations
+    ///     Controller that handles all User operations
     /// </summary>
     public class AccountController : Controller
     {
@@ -46,14 +46,12 @@ namespace LibRes.App.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            if (ModelState.IsValid)
-            {
-                var result = await _signInManager
-                    .PasswordSignInAsync(model.Email, model.Password, false, false);
-                if (result.Succeeded) return RedirectToAction("Index", "Home");
-                // TODO: Add error, not exception
-                throw new Exception("Invalid login attempt");
-            }
+            if (!ModelState.IsValid) return View(model);
+            
+            var result = await _signInManager
+                .PasswordSignInAsync(model.Email, model.Password, false, false);
+            if (result.Succeeded) {return RedirectToAction("Index", "Home");}
+            else {ModelState.AddModelError("Email", "Wrong credentials");}
 
             return View(model);
         }
@@ -65,7 +63,7 @@ namespace LibRes.App.Controllers
         [Route("/logout")]
         public ActionResult Logout()
         {
-            _signInManager.SignOutAsync();
+            _signInManager?.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
 
@@ -136,9 +134,9 @@ namespace LibRes.App.Controllers
             var user = await _userManager.FindByNameAsync(model.Email);
             if (user == null) return View("ForgotPasswordConfirmation");
 
-            var Code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            return RedirectToAction("ResetPassword", "Account", new {Code, user.Email});
+            return RedirectToAction("ResetPassword", "Account", new {Code = code, user.Email});
 
             // If we got this far, something failed, redisplay form
         }
