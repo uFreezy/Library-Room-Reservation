@@ -10,10 +10,11 @@ namespace LibRes.App.DbModels
         {
         }
 
-        public EventOccuranceModel(ReservationModel reservation, DateTime occurance)
+        public EventOccuranceModel(ReservationModel reservation, DateTime occurance, double durrationMinutes)
         {
             Reservation = reservation;
             Occurance = occurance;
+            DurrationMinutes = durrationMinutes;
         }
 
         [Key]
@@ -23,5 +24,7 @@ namespace LibRes.App.DbModels
         [Required] public virtual ReservationModel Reservation { get; set; }
 
         [Required] public DateTime Occurance { get; set; }
+
+        [Required] public double DurrationMinutes { get; set; }
     }
 }

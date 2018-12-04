@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using LibRes.App.Models;
 
 namespace LibRes.App.DbModels
 {
@@ -21,10 +21,6 @@ namespace LibRes.App.DbModels
 
         [Required] public ICollection<EventOccuranceModel> EventDates { get; set; }
 
-        [Required] public string BeginHour { get; set; }
-
-        [Required] public string EndHour { get; set; }
-
         [Required] public RoomModel MeetingRoom { get; set; }
 
         [Required] public string Department { get; set; }
@@ -34,5 +30,7 @@ namespace LibRes.App.DbModels
         [Required] public bool WantsMultimedia { get; set; }
 
         public string Description { get; set; }
+
+        [Required] public DateTime CreatedOn { get; set; }
     }
 }

@@ -177,7 +177,7 @@ namespace LibRes.App.Controllers
 
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null) return RedirectToAction("ResetPasswordConfirmation", "Account");
-            if (user.SecrectAnswerDecrypted != model.SecretAnswer)
+            if (user.SecretAnswerDecrypted != model.SecretAnswer)
             {
                 ViewBag.SecretQuestion = user.SecretQuestion;
                 ViewBag.Email = user.Email;

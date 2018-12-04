@@ -6,7 +6,7 @@
 @using (Html.BeginForm("CreateEvent", "Calendar", FormMethod.Post, new {@class = "form-horizontal", role = "form"}))
 {
     @Html.AntiForgeryToken()
-    <h4>Create a new account.</h4>
+    <h4>Create event.</h4>
     <hr/>
     @Html.ValidationSummary("", new {@class = "text-danger"})
     <div class="form-group">
@@ -101,8 +101,6 @@
 
                 } else
                     $("#modalBtn").hide();
-                // $("#mod_placeholder").html(''); //clearing the innerHTML if checkbox is unchecked
-
             });
 
     </script>

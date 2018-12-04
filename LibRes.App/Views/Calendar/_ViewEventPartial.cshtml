@@ -16,6 +16,7 @@
         position: absolute;
     }
 </style>
+@await Component.InvokeAsync("EventEditComponent",Model.Id);
 <div class="modal" id="eventInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -89,7 +90,7 @@
                 }
             </div>
             <div class="modal-footer">
-                <button type="button" rel="tooltip" class="btn btn-success">
+                <button type="button" rel="tooltip" class="btn btn-success" data-toggle="modal" data-target="#editModal" data-dismiss="modal">
                     <i class="material-icons">edit</i>
                 </button>
                 <button type="button" rel="tooltip" class="btn btn-danger">

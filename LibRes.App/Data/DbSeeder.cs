@@ -18,7 +18,12 @@ namespace LibRes.App.Data
                 {
                     RoomName = "Sample room 1"
                 };
+                var sampleRoomModel2 = new RoomModel
+                {
+                    RoomName = "Sample room 2"
+                };
                 context.AddRange(sampleRoomModel);
+                context.AddRange(sampleRoomModel2);
             }
 
 
@@ -47,8 +52,6 @@ namespace LibRes.App.Data
                 {
                     EventName = "Techno party",
                     EventDates = new HashSet<EventOccuranceModel>(),
-                    BeginHour = "12:00",
-                    EndHour = "14:00",
                     MeetingRoom = context.RoomModels.First(),
                     Department = "Kupon",
                     ReservationOwner = userManager.FindByEmailAsync("abc@xyz.com").Result,
@@ -60,7 +63,8 @@ namespace LibRes.App.Data
                     new EventOccuranceModel
                     {
                         Reservation = sampleReseravtion,
-                        Occurance = DateTime.Now
+                        Occurance = DateTime.Now,
+                        DurrationMinutes = 60.0
                     }
                 };
 
