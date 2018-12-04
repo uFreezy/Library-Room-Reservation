@@ -26,24 +26,6 @@ namespace LibRes.App.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            /* builder.Entity<ApplicationUser>()
-                    .HasMany<ReservationModel>(a => a.Reservations)
-                    .WithOne(r => r.ReservationOwner);
- 
- 
-             builder.Entity<ReservationModel>()
-                    .HasMany<EventOccuranceModel>(r => r.EventDates)
-                    .WithOne(e => e.Reservation);*/
-
-            /*modelBuilder.Entity<Contest>()
-                   .HasMany<User>(c => c.Participants)
-                   .WithMany(p => p.ContestsParticipated)
-                   .Map(pc =>
-                   {
-                       pc.MapLeftKey("ContestId");
-                       pc.MapRightKey("UserId");
-                       pc.ToTable("ContestsParticipants");
-                   });*/
 
             base.OnModelCreating(builder);
 

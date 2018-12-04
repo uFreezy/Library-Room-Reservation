@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using LibRes.App.DbModels;
 using Microsoft.AspNetCore.Identity;
 
-namespace LibRes.App.Models
+namespace LibRes.App.DbModels
 {
     public class ApplicationUser : IdentityUser
     {
@@ -38,16 +37,16 @@ namespace LibRes.App.Models
         }
 
         /*
-         * This here is neeeded because when Entity framework puts data in the DB
+         * This here is needed because when Entity framework puts data in the DB
          * it calls the DB model's getter, so the getter has to return a encryped
          * value as well otherwise there isn't a point to the whole encryption.
-         * So with this non-mapped propery we can actually have a way to fetch the 
-         * non-encrypet value.
+         * So with this non-mapped property we can actually have a way to fetch the 
+         * non-encrypted value.
         */
         [NotMapped]
         public string SecrectAnswerDecrypted
         {
-            get => EncryptionUtil.Decrypt(_secretAnswer);
+            get => EncryptionUtil.Decrypt(SecretAnswer);
             private set => _secretAnswer = EncryptionUtil.Encrypt(value);
         }
     }

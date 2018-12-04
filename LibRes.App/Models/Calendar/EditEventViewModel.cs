@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace LibRes.App.Models.Calendar
 {
-    public sealed class CreateEventModel
+    // TODO: Implement
+    public class EditEventViewModel
     {
         [Required(ErrorMessage = "Event name is required.")]
         [Display(Name = "Name")]

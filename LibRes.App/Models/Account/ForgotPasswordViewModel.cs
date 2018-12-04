@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace LibRes.App.Models
+namespace LibRes.App.Models.Account
 {
     public class ForgotPasswordViewModel
     {

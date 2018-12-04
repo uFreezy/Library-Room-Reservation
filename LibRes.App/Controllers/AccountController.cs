@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using LibRes.App.DbModels;
 using LibRes.App.Models;
+using LibRes.App.Models.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -88,7 +90,7 @@ namespace LibRes.App.Controllers
         /// </summary>
         /// <returns>The login view if the registration is successful.</returns>
         /// <param name="model">Register view model that contains the register form data.</param>
-        [HttpPost]
+        [HttpPost("/register")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterModel model)
         {
@@ -98,10 +100,16 @@ namespace LibRes.App.Controllers
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 UserName = model.Email,
-                Email = model.Email
+                Email = model.Email,
+                EmailConfirmed = true,
+                PhoneNumber = model.PhoneNumber,
+                SecretQuestion = model.SecretQuestion,
+                SecretAnswer = model.SecretAnswer
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded) return View(model);
+            
+            
             await _signInManager.SignInAsync(user, false);
 
             return RedirectToAction("Login", "Account");
@@ -137,8 +145,6 @@ namespace LibRes.App.Controllers
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
 
             return RedirectToAction("ResetPassword", "Account", new {Code = code, user.Email});
-
-            // If we got this far, something failed, redisplay form
         }
 
         /// <summary>
@@ -147,6 +153,7 @@ namespace LibRes.App.Controllers
         /// <returns>The second form for password reset</returns>
         /// <param name="code">The code required by ASP.NET for resseting passwords.</param>
         /// <param name="email">The email of the user.</param>
+        [Route("/reset")]
         [AllowAnonymous]
         public async Task<ActionResult> ResetPassword(string code, string email)
         {
@@ -161,16 +168,22 @@ namespace LibRes.App.Controllers
         /// </summary>
         /// <returns>The password.</returns>
         /// <param name="model">Model.</param>
-        [HttpPost]
+        [HttpPost("/reset")]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
 
-            var user = await _userManager.FindByNameAsync(model.Email);
+            var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null) return RedirectToAction("ResetPasswordConfirmation", "Account");
-            if (user.SecrectAnswerDecrypted != model.SecretAnswer) return View(model);
+            if (user.SecrectAnswerDecrypted != model.SecretAnswer)
+            {
+                ViewBag.SecretQuestion = user.SecretQuestion;
+                ViewBag.Email = user.Email;
+                
+                return View(model);
+            }
             var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
 
             if (result.Succeeded) return RedirectToAction("ResetPasswordConfirmation", "Account");

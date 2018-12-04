@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace LibRes.App.Models
+namespace LibRes.App.Models.Account
 {
     public class RegisterModel
     {
@@ -11,10 +11,6 @@ namespace LibRes.App.Models
         [Required]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
-
-        [Required]
-        [Display(Name = "Username")]
-        public string UserName { get; set; }
 
         [Required]
         [EmailAddress]

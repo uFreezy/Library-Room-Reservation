@@ -1,5 +1,6 @@
 ﻿using System;
 using LibRes.App.Data;
+using LibRes.App.DbModels;
 using LibRes.App.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
