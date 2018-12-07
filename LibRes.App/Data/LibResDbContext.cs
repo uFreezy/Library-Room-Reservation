@@ -1,5 +1,4 @@
 ﻿using LibRes.App.DbModels;
-using LibRes.App.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +21,7 @@ namespace LibRes.App.Data
 
         public DbSet<RoomModel> RoomModels { get; set; }
 
-        public DbSet<EventOccurenceModel> EventOccurances { get; set; }
+        public DbSet<EventOccurenceModel> EventOccurrences { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

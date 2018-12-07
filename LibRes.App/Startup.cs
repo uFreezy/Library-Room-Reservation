@@ -1,7 +1,6 @@
 ﻿using System;
 using LibRes.App.Data;
 using LibRes.App.DbModels;
-using LibRes.App.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -21,12 +20,12 @@ namespace LibRes.App
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            var connectionString =
+            const string connectionString =
                 "Server=tcp:librestest.database.windows.net,1433;Initial Catalog=LibResTest;Persist Security Info=False;User ID=libresmanager;Password=Libres123456!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             services
                 .AddDbContext<LibResDbContext>(o =>

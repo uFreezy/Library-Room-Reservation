@@ -69,7 +69,7 @@ namespace LibRes.App.Controllers
             // Sets default room id, which is the first room in the table.
             if (roomId == -1) roomId = Context.RoomModels.First().Id;
 
-            var eventOccurrences = Context.EventOccurances
+            var eventOccurrences = Context.EventOccurrences
                 .Include(o => o.Reservation)
                 .Where(o => o.Reservation.MeetingRoom.Id == roomId &&
                             o.Occurence >= from && o.Occurence <= to)
@@ -404,7 +404,7 @@ namespace LibRes.App.Controllers
             return (from date in model.EventDates
                 let begin = date.Occurence
                 let end = date.Occurence.AddMinutes(date.DurationMinutes)
-                where Context.EventOccurances.Any(e =>
+                where Context.EventOccurrences.Any(e =>
                     e.Reservation.MeetingRoom.Id.ToString() == model.MeetingRoom.Id.ToString() &&
                     e.Occurence < end &&
                     e.Occurence + TimeSpan.FromMinutes(e.DurationMinutes) > begin)

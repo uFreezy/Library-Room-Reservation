@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using LibRes.App.DbModels;
-using LibRes.App.Models;
 using LibRes.App.Models.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -53,7 +51,8 @@ namespace LibRes.App.Controllers
             var result = await _signInManager
                 .PasswordSignInAsync(model.Email, model.Password, false, false);
             if (result.Succeeded) {return RedirectToAction("Index", "Home");}
-            else {ModelState.AddModelError("Email", "Wrong credentials");}
+
+            ModelState.AddModelError("Email", "Wrong credentials");
 
             return View(model);
         }
