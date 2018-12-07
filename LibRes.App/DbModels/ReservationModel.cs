@@ -9,7 +9,7 @@ namespace LibRes.App.DbModels
     {
         public ReservationModel()
         {
-            EventDates = new HashSet<EventOccuranceModel>();
+            EventDates = new HashSet<EventOccurenceModel>();
             WantsMultimedia = false;
         }
 
@@ -19,7 +19,7 @@ namespace LibRes.App.DbModels
 
         [Required] public string EventName { get; set; }
 
-        [Required] public ICollection<EventOccuranceModel> EventDates { get; set; }
+        [Required] public ICollection<EventOccurenceModel> EventDates { get; set; }
 
         [Required] public RoomModel MeetingRoom { get; set; }
 

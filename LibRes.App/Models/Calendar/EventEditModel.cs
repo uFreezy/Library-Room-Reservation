@@ -23,7 +23,7 @@ namespace LibRes.App.Models.Calendar
         [Display(Name = "Room")] 
         public string MeetingRoomId { get; set; }
 
-        public ICollection<EventOccuranceModel> EventDates { get; set; }
+        public ICollection<EventOccurenceModel> EventDates { get; set; }
 
         [Required]
         [Display(Name = "Beginning")]

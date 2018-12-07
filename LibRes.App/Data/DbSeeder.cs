@@ -48,28 +48,28 @@ namespace LibRes.App.Data
 
             if (!context.ReservationModels.Any())
             {
-                var sampleReseravtion = new ReservationModel
+                var sampleReservation = new ReservationModel
                 {
                     EventName = "Techno party",
-                    EventDates = new HashSet<EventOccuranceModel>(),
+                    EventDates = new HashSet<EventOccurenceModel>(),
                     MeetingRoom = context.RoomModels.First(),
                     Department = "Kupon",
                     ReservationOwner = userManager.FindByEmailAsync("abc@xyz.com").Result,
                     WantsMultimedia = false
                 };
 
-                sampleReseravtion.EventDates = new HashSet<EventOccuranceModel>
+                sampleReservation.EventDates = new HashSet<EventOccurenceModel>
                 {
-                    new EventOccuranceModel
+                    new EventOccurenceModel
                     {
-                        Reservation = sampleReseravtion,
-                        Occurance = DateTime.Now,
-                        DurrationMinutes = 60.0
+                        Reservation = sampleReservation,
+                        Occurence = DateTime.Now,
+                        DurationMinutes = 60.0
                     }
                 };
 
 
-                context.AddRange(sampleReseravtion);
+                context.AddRange(sampleReservation);
                 context.SaveChanges();
             }
         }

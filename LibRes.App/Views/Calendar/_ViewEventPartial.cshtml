@@ -90,12 +90,14 @@
                 }
             </div>
             <div class="modal-footer">
-                <button type="button" rel="tooltip" class="btn btn-success" data-toggle="modal" data-target="#editModal" data-dismiss="modal">
-                    <i class="material-icons">edit</i>
-                </button>
-                <button type="button" rel="tooltip" class="btn btn-danger">
-                    <i class="material-icons">close</i>
-                </button>
+                @if (Model.IsOwner)
+                {
+                    <button type="button" rel="tooltip" class="btn btn-success" data-toggle="modal" data-target="#editModal" data-dismiss="modal">
+                        Edit
+                    </button>
+                    @Html.ActionLink("Delete", "DeleteEvent", "Calendar", new { eventId = Model.Id }, new { @class = "btn btn-danger" })
+                }
+                
             </div>
         </div>
     </div>

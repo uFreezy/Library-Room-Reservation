@@ -35,7 +35,7 @@ namespace LibRes.App.Controllers
         {
             if (HttpContext.User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home");
 
-            return View("Views/Account/Login.cshtml");
+            return View("Login");
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace LibRes.App.Controllers
         }
 
         /// <summary>
-        ///     Get action that returns the view for thepassword reset if the user isn't logged.
+        ///     Get action that returns the view for the password reset if the user isn't logged.
         /// </summary>
         /// <returns>The password reset view.</returns>
         [AllowAnonymous]
@@ -129,9 +129,9 @@ namespace LibRes.App.Controllers
 
         /// <summary>
         ///     Post action that generates the pass reset token, then passes it to the 'ResetPassword'
-        ///     get action. This token is neccessary for ASP.NET password to be resseted.
+        ///     get action. This token is necessary for ASP.NET password to be renewed.
         /// </summary>
-        /// <returns>Call to the ResetPassword GET action with embeded data.</returns>
+        /// <returns>Call to the ResetPassword GET action with embedded data.</returns>
         /// <param name="model">View model containing the form data.</param>
         [HttpPost]
         [AllowAnonymous]
@@ -140,6 +140,7 @@ namespace LibRes.App.Controllers
         {
             if (!ModelState.IsValid) return View(model);
             var user = await _userManager.FindByNameAsync(model.Email);
+            // ReSharper disable once Mvc.ViewNotResolved
             if (user == null) return View("ForgotPasswordConfirmation");
 
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -148,10 +149,10 @@ namespace LibRes.App.Controllers
         }
 
         /// <summary>
-        ///     Get action that returns view with the second form for resseting the password.
+        ///     Get action that returns view with the second form for resetting the password.
         /// </summary>
         /// <returns>The second form for password reset</returns>
-        /// <param name="code">The code required by ASP.NET for resseting passwords.</param>
+        /// <param name="code">The code required by ASP.NET for resetting passwords.</param>
         /// <param name="email">The email of the user.</param>
         [Route("/reset")]
         [AllowAnonymous]

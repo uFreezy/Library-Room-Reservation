@@ -4,17 +4,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LibRes.App.DbModels
 {
-    public class EventOccuranceModel
+    public class EventOccurenceModel
     {
-        public EventOccuranceModel()
+        public EventOccurenceModel()
         {
         }
 
-        public EventOccuranceModel(ReservationModel reservation, DateTime occurance, double durrationMinutes)
+        public EventOccurenceModel(ReservationModel reservation, DateTime occurence, double durationMinutes)
         {
             Reservation = reservation;
-            Occurance = occurance;
-            DurrationMinutes = durrationMinutes;
+            Occurence = occurence;
+            DurationMinutes = durationMinutes;
         }
 
         [Key]
@@ -23,8 +23,8 @@ namespace LibRes.App.DbModels
 
         [Required] public virtual ReservationModel Reservation { get; set; }
 
-        [Required] public DateTime Occurance { get; set; }
+        [Required] public DateTime Occurence { get; set; }
 
-        [Required] public double DurrationMinutes { get; set; }
+        [Required] public double DurationMinutes { get; set; }
     }
 }

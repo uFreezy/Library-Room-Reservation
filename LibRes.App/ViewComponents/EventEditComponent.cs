@@ -25,15 +25,12 @@ namespace LibRes.App.ViewComponents
                 {
                     Id = r.Id,
                     EventName = r.EventName,
-                    EventDate = r.EventDates.First().Occurance,
+                    EventDate = r.EventDates.First().Occurence,
                     MeetingRoomId = r.MeetingRoom.Id.ToString(),
-                    //EventRepeatModel = 
                     EventDates = r.EventDates,
-                    BeginHour = DateTime.Parse(r.EventDates.First().Occurance.ToString("HH:mm")),
-                    EndHour = DateTime.Parse((r.EventDates.First().Occurance- TimeSpan.FromMinutes(r.EventDates.First().DurrationMinutes)).ToString("HH:mm")),
-                   // MeetingRoom = r.MeetingRoom,
+                    BeginHour = DateTime.Parse(r.EventDates.First().Occurence.ToString("HH:mm")),
+                    EndHour = DateTime.Parse((r.EventDates.First().Occurence- TimeSpan.FromMinutes(r.EventDates.First().DurationMinutes)).ToString("HH:mm")),
                     Department = r.Department,
-                    //ReservationOwner = r.ReservationOwner,
                     WantsMultimedia = r.WantsMultimedia,
                     Description = r.Description
                 })

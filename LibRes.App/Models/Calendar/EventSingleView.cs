@@ -38,5 +38,7 @@ namespace LibRes.App.Models.Calendar
 
         [Display(Name = "Additional Description: ")]
         public string Description { get; set; }
+
+        public bool IsOwner { get; set; }
     }
 }

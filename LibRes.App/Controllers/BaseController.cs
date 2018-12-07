@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LibRes.App.Controllers
 {
+    /// <inheritdoc />
     /// <summary>
     ///     TODO: Document why are we using this.
     /// </summary>

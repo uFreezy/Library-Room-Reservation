@@ -4,7 +4,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace LibRes.App
+namespace LibRes.App.Utils
 {
     public static class EncryptionUtil
     {
@@ -41,17 +41,17 @@ namespace LibRes.App
         }
 
         /// <summary>
-        ///     Decrypts AES enrypted string and returns the plain value.
+        ///     Decrypts AES encrypted string and returns the plain value.
         /// </summary>
         /// <returns>Plain text value.</returns>
         /// <param name="cipherText">The encrypted string to be decrypted.</param>
         public static string Decrypt(string cipherText)
         {
-            const string EncryptionKey = "MAKV2SPBNI99212";
+            const string encryptionKey = "MAKV2SPBNI99212";
             var cipherBytes = Convert.FromBase64String(cipherText);
             using (var encryptor = Aes.Create())
             {
-                var pdb = new Rfc2898DeriveBytes(EncryptionKey,
+                var pdb = new Rfc2898DeriveBytes(encryptionKey,
                     new byte[] {0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76});
                 Debug.Assert(encryptor != null, nameof(encryptor) + " != null");
                 encryptor.Key = pdb.GetBytes(32);

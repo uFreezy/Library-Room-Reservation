@@ -22,7 +22,7 @@ namespace LibRes.App.Data
 
         public DbSet<RoomModel> RoomModels { get; set; }
 
-        public DbSet<EventOccuranceModel> EventOccurances { get; set; }
+        public DbSet<EventOccurenceModel> EventOccurances { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
