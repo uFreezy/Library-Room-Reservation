@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using LibRes.App.DbModels;
+using LibRes.App.Models.Calendar;
 
 namespace LibRes.App.Models.Account
 {
@@ -14,6 +15,6 @@ namespace LibRes.App.Models.Account
 
         public string PhoneNumber { get; set; }
 
-        public List<ReservationModel> Reservations { get; set; }
+        public List<EventSingleView> Events  { get; set; }
     }
 }

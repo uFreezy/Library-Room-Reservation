@@ -10,7 +10,7 @@
 <div>
     @Html.DropDownList("Select Room", 
         (IEnumerable<SelectListItem>) ViewBag.Rooms,
-        new { @id = "roomSelect", @class = "form-control" })
+        new { @id = "roomSelect", @class = "btn btn-secondary dropdown-toggle" })
 </div>
 <div id="calendar"></div>
 <div id="load_cont"></div>

@@ -1,8 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using LibRes.App.DbModels;
 using LibRes.App.Models.Account;
+using LibRes.App.Models.Calendar;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -109,7 +112,11 @@ namespace LibRes.App.Controllers
                 SecretAnswer = model.SecretAnswer
             };
             var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded) return View(model);
+            if (!result.Succeeded)
+            {
+               // ModelState.Add
+                return View(model);
+            }
 
 
             await _signInManager.SignInAsync(user, false);
@@ -214,6 +221,30 @@ namespace LibRes.App.Controllers
             if (userId == "" || userId == _userManager.GetUserId(HttpContext.User))
                 return RedirectToAction("EditProfile");
 
+            var evs = Context.ReservationModels
+                .Include(r => r.EventDates)
+                .Include(r => r.MeetingRoom)
+                .Include(r => r.ReservationOwner)
+                .Where(r => r.ReservationOwner.Id == userId)
+                .Select(r => new EventSingleView
+                {
+                    Id = r.Id,
+                    EventName = r.EventName,
+                    InitialDate = r.EventDates.First().Occurence,
+                    RepeatDates = r.EventDates
+                        .Where(d => d.Id != r.EventDates.First().Id)
+                        .Select(d => d.Occurence).ToList(),
+                    BeginHour = r.EventDates.First().Occurence.ToString("HH:mm"),
+                    EndHour = (r.EventDates.First().Occurence -
+                               TimeSpan.FromMinutes(r.EventDates.First().DurationMinutes)).ToString("HH:mm"),
+                    MeetingRoom = r.MeetingRoom.RoomName,
+                    Department = r.Department,
+                    ReservationOwner = r.ReservationOwner,
+                    WantsMultimedia = r.WantsMultimedia,
+                    IsOwner = r.ReservationOwner.Id == HttpContext.User
+                                  .FindFirst(ClaimTypes.NameIdentifier).Value
+                }).ToList();
+            
             var profile = Context.Users
                 .Where(u => u.Id == userId)
                 .Include(u => u.Reservations)
@@ -223,7 +254,7 @@ namespace LibRes.App.Controllers
                     LastName = u.LastName,
                     Email = u.Email,
                     PhoneNumber = u.PhoneNumber,
-                    Reservations = u.Reservations.ToList()
+                    Events = evs
                 }).First();
 
             return View("_Profile", profile);
