@@ -23,7 +23,6 @@ namespace LibRes.App.DbModels
 
         [Required]
         [MaxLength(100)]
-        // TODO: Find a way to encrypt and decrypt it so we don't keep it as a plain string.
         public string SecretAnswer
         {
             get => _secretAnswer;

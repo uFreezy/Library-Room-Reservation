@@ -1,0 +1,54 @@
+@model LibRes.App.Models.Account.ProfileEditModel
+
+@{
+    ViewBag.Title = "Edit Profile";
+}
+<h2>@ViewBag.Title.</h2>
+
+@using (Html.BeginForm("EditProfile", "Account", FormMethod.Post, new {@class = "form-horizontal", role = "form"}))
+{
+    <div class="card">
+        <div class="card-header card-header-primary card-header-info">
+            <h4 class="card-title">Edit Profile</h4>
+            <p class="card-category">Complete your profile</p>
+        </div>
+        <div class="card-body">
+            <form>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group bmd-form-group">
+                            @Html.LabelFor(m => m.Email, new {@class = "bmd-label-floating"})
+                            @Html.TextBoxFor(m => m.Email, new {@class = "form-control", @readonly = "true"})
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group bmd-form-group">
+                            @Html.LabelFor(m => m.FirstName, new {@class = "bmd-label-floating"})
+                            @Html.TextBoxFor(m => m.FirstName, new {@class = "form-control"})
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group bmd-form-group">
+                            @Html.LabelFor(m => m.LastName, new {@class = "bmd-label-floating"})
+                            @Html.TextBoxFor(m => m.LastName, new {@class = "form-control"})
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group bmd-form-group">
+
+                            @Html.LabelFor(m => m.PhoneNumber, new {@class = "bmd-label-floating"})
+                            @Html.TextBoxFor(m => m.PhoneNumber, new {@class = "form-control"})
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary pull-right btn-info">Update Profile</button>
+                <div class="clearfix"></div>
+            </form>
+        </div>
+    </div>
+}

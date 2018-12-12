@@ -43,7 +43,7 @@ namespace LibRes.App.Controllers
                                TimeSpan.FromMinutes(r.EventDates.First().DurationMinutes)).ToString("HH:mm"),
                     MeetingRoom = r.MeetingRoom.RoomName,
                     Department = r.Department,
-                    ReservationOwner = r.ReservationOwner.Email,
+                    ReservationOwner = r.ReservationOwner,
                     WantsMultimedia = r.WantsMultimedia,
                     IsOwner = r.ReservationOwner.Id == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value
                 }).FirstOrDefault();

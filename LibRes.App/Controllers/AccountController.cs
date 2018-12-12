@@ -1,17 +1,20 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using LibRes.App.DbModels;
 using LibRes.App.Models.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibRes.App.Controllers
 {
     /// <inheritdoc />
     /// <summary>
-    ///     Controller that handles all User operations
+    ///     Controller that handles all User operations.
     /// </summary>
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -47,10 +50,10 @@ namespace LibRes.App.Controllers
         public async Task<IActionResult> Login(LoginModel model)
         {
             if (!ModelState.IsValid) return View(model);
-            
+
             var result = await _signInManager
                 .PasswordSignInAsync(model.Email, model.Password, false, false);
-            if (result.Succeeded) {return RedirectToAction("Index", "Home");}
+            if (result.Succeeded) return RedirectToAction("Index", "Home");
 
             ModelState.AddModelError("Email", "Wrong credentials");
 
@@ -107,8 +110,8 @@ namespace LibRes.App.Controllers
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded) return View(model);
-            
-            
+
+
             await _signInManager.SignInAsync(user, false);
 
             return RedirectToAction("Login", "Account");
@@ -181,9 +184,10 @@ namespace LibRes.App.Controllers
             {
                 ViewBag.SecretQuestion = user.SecretQuestion;
                 ViewBag.Email = user.Email;
-                
+
                 return View(model);
             }
+
             var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
 
             if (result.Succeeded) return RedirectToAction("ResetPasswordConfirmation", "Account");
@@ -193,11 +197,89 @@ namespace LibRes.App.Controllers
         }
 
         /// <summary>
+        /// Serves view confirming that the password has been changed.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>View confirming that the password has been changed.</returns>
         [AllowAnonymous]
         public ActionResult ResetPasswordConfirmation()
         {
+            return View();
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("/profile")]
+        public IActionResult Profile(string userId = "")
+        {
+            if (userId == "" || userId == _userManager.GetUserId(HttpContext.User))
+                return RedirectToAction("EditProfile");
+
+            var profile = Context.Users
+                .Where(u => u.Id == userId)
+                .Include(u => u.Reservations)
+                .Select(u => new ProfileViewModel
+                {
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Email = u.Email,
+                    PhoneNumber = u.PhoneNumber,
+                    Reservations = u.Reservations.ToList()
+                }).First();
+
+            return View("_Profile", profile);
+        }
+
+        /// <summary>
+        /// Fetches the current profile data for the logged user
+        /// and returns the profile edit form.
+        /// </summary>
+        /// <returns>The profile edit view.</returns>
+        [HttpGet]
+        [Authorize]
+        [Route("/profile/edit")]
+        public IActionResult EditProfile()
+        {
+            var usr = _userManager.GetUserAsync(HttpContext.User).Result;
+
+            var profile = new ProfileEditModel
+            {
+                Email = usr.Email,
+                FirstName = usr.FirstName,
+                LastName = usr.LastName,
+                PhoneNumber = usr.PhoneNumber
+            };
+
+            return View(profile);
+        }
+        
+        /// <summary>
+        /// Performs edit on user's profile data.
+        /// </summary>
+        /// <param name="model">The Data model user for editing.</param>
+        /// <returns>View to the profile.</returns>
+        [Authorize]
+        [HttpPost("/profile/edit")]
+        public IActionResult EditProfile(ProfileEditModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var usr = _userManager.GetUserAsync(HttpContext.User).Result;
+
+            var profile = Context.Users.First(u => u.Id == usr.Id);
+
+            if (model.FirstName != null) profile.FirstName = model.FirstName;
+            if (model.LastName != null) profile.LastName = model.LastName;
+            if (model.PhoneNumber != null)
+            {
+                if (Regex.Matches(model.PhoneNumber, @"(\+359|359|0)\d{9}").Count > 0)
+                    profile.PhoneNumber = model.PhoneNumber;
+                else
+                    ModelState.AddModelError("PhoneNumber", "Invalid phone number format.");
+            }
+
+            Context.Users.Update(profile);
+            Context.SaveChanges();
+
             return View();
         }
     }

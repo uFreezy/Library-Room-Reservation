@@ -6,9 +6,9 @@
     <title>@ViewData["Title"] - LibRes.App</title>
 
     <link href="~/css/site.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css" />
-        
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/material-dashboard@2.1.0/assets/css/material-dashboard.min.css" >
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css"/>
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/material-dashboard@2.1.0/assets/css/material-dashboard.min.css">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons"/>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
     <environment exclude="Development">
@@ -19,19 +19,19 @@
 </head>
 
 <body>
-    <!--   Core JS Files   -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="//unpkg.com/popper.js/dist/umd/popper.min.js"></script>
-    <script src="//unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js" integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9" crossorigin="anonymous"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.4.0/perfect-scrollbar.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
-    <!-- Chartist JS -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/chartist/0.11.0/chartist.min.js"></script>
-    <!--  Notifications Plugin    -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.7/bootstrap-notify.min.js"></script>
-    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="//cdn.jsdelivr.net/npm/material-dashboard@2.1.0/assets/js/material-dashboard.min.js"></script>
+<!--   Core JS Files   -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="//unpkg.com/popper.js/dist/umd/popper.min.js"></script>
+<script src="//unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js" integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.4.0/perfect-scrollbar.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
+<!-- Chartist JS -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/chartist/0.11.0/chartist.min.js"></script>
+<!--  Notifications Plugin    -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.7/bootstrap-notify.min.js"></script>
+<!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="//cdn.jsdelivr.net/npm/material-dashboard@2.1.0/assets/js/material-dashboard.min.js"></script>
 
 <environment exclude="Development">
     <script src="//ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
@@ -47,24 +47,42 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-info">
     <div class="container">
-        <a class="navbar-brand" href="#">Library Reservation</a>
+        @Html.ActionLink("Library Reservation", "Index","Home", new {}, new{@class = "navbar-brand"})
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    
+                    @Html.ActionLink("Home", "Index","Home", new {}, new {@class = "nav-link"})
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
+                    @Html.ActionLink("Calendar", "ViewEvents","Calendar", new {}, new {@class = "nav-link"})
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
+                    @Html.ActionLink("Create Event", "CreateEvent","Calendar", new {}, new {@class = "nav-link"})
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#">Disabled</a>
-                </li>
+            </ul>
+            <ul class="navbar-nav">
+            
+            @{
+                if (User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @User.Identity.Name
+                            <i class="material-icons">
+                                perm_identity
+                            </i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            @Html.ActionLink("Profile", "Profile","Account", new {} , new {@class = "dropdown-item"})
+                           @Html.ActionLink("Logout", "Logout", "Account", new {}, new {@class = "dropdown-item"})
+                        </div>
+                    </li>
+                }
+            }
             </ul>
         </div>
     </div>

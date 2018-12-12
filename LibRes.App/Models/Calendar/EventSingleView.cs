@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using LibRes.App.DbModels;
 
 namespace LibRes.App.Models.Calendar
 {
@@ -30,7 +31,7 @@ namespace LibRes.App.Models.Calendar
         [Display(Name = "Department: ")]
         public string Department { get; set; }
 
-        [Required] [Display(Name = "Owner: ")] public string ReservationOwner { get; set; }
+        [Required] [Display(Name = "Owner: ")] public ApplicationUser ReservationOwner { get; set; }
 
         [Required]
         [Display(Name = "Needs Multimedia: ")]

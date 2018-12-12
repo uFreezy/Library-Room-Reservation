@@ -16,7 +16,7 @@
         position: absolute;
     }
 </style>
-@await Component.InvokeAsync("EventEditComponent",Model.Id);
+@await Component.InvokeAsync("EventEditComponent", Model.Id);
 <div class="modal" id="eventInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -75,7 +75,9 @@
                 </p>
                 <p>
                     @Html.LabelFor(m => m.ReservationOwner)
-                    @Html.DisplayFor(m => m.ReservationOwner)
+                    @Html.ActionLink(Model.ReservationOwner.FirstName + " " + 
+                                     Model.ReservationOwner.LastName, "Profile", 
+                        "Account", new {userId = Model.ReservationOwner.Id})
                 </p>
                 <p>
                     @Html.LabelFor(m => m.WantsMultimedia)
@@ -95,9 +97,9 @@
                     <button type="button" rel="tooltip" class="btn btn-success" data-toggle="modal" data-target="#editModal" data-dismiss="modal">
                         Edit
                     </button>
-                    @Html.ActionLink("Delete", "DeleteEvent", "Calendar", new { eventId = Model.Id }, new { @class = "btn btn-danger" })
+                    @Html.ActionLink("Delete", "DeleteEvent", "Calendar", new {eventId = Model.Id}, new {@class = "btn btn-danger"})
                 }
-                
+
             </div>
         </div>
     </div>
