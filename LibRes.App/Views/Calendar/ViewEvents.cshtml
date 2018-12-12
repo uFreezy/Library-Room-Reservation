@@ -5,9 +5,7 @@
         /* bug fix - no overlay */
         display: none !important;
     }
-    .fa-spinner:before {
-        content: "\f110";
-    }
+
 </style>
 <div id="containers"></div>
 <div>
@@ -33,7 +31,7 @@
                         url: '@Url.Action("ViewEventPartial")',
                         beforeSend: function() {
                             $('#load_cont').append(
-                                '<div class="modal fade bd-example-modal-lg" id="load" data-backdrop="static" data-keyboard="false" tabindex="-1">' +
+                                '<div class="modal bd-example-modal-lg" id="load" data-backdrop="static" data-keyboard="false" tabindex="-1">' +
                                 '<div class="modal-dialog modal-sm">' +
                                 '<div class="modal-content" >' +
                                 '<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div> </div> </div>');
