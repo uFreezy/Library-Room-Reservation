@@ -35,8 +35,10 @@
                             $('#load_cont').append(
                                 '<div class="modal fade bd-example-modal-lg" id="load" data-backdrop="static" data-keyboard="false" tabindex="-1">' +
                                 '<div class="modal-dialog modal-sm">' +
-                                '<div class="modal-content" style="width: 48px">' +
-                                '<span class="fa fa-spinner fa-spin fa-3x"></span></div> </div> </div>');
+                                '<div class="modal-content" >' +
+                                '<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div> </div> </div>');
+                           
+                            //$('#load_cont').append('<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>')
                             $('#load').modal("show");
                         },
                         type: 'GET',
