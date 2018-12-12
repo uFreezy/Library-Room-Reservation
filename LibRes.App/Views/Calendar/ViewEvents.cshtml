@@ -5,7 +5,10 @@
         /* bug fix - no overlay */
         display: none !important;
     }
-
+    #load_cnt
+    {
+        box-shadow: none;
+    }
 </style>
 <div id="containers"></div>
 <div>
@@ -31,12 +34,15 @@
                         url: '@Url.Action("ViewEventPartial")',
                         beforeSend: function() {
                             $('#load_cont').append(
-                                '<div class="modal bd-example-modal-lg" id="load" data-backdrop="static" data-keyboard="false" tabindex="-1">' +
+                                '<div class="modal bd-example-modal-lg" id="load" data-backdrop="static"' +
+                                ' data-keyboard="false" tabindex="-1">' +
                                 '<div class="modal-dialog modal-sm">' +
-                                '<div class="modal-content" >' +
-                                '<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div> </div> </div>');
+                                '<div class="modal-content"  id="load_cnt">' +
+                                '<div class="lds-roller"><div></div><div></div><div>' +
+                                '</div><div></div><div></div><div></div><div>' +
+                                '</div><div></div></div></div> </div> </div>');
                            
-                            //$('#load_cont').append('<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>')
+                            
                             $('#load').modal("show");
                         },
                         type: 'GET',
@@ -48,7 +54,7 @@
                             $('#eventInfo').modal();
                         },
                         complete: function() {
-                            $('#load_cont').html('');
+                           // $('#load_cont').html('');
                             $('.modal-backdrop.fade').remove();
                         }
                     });
@@ -68,7 +74,7 @@
                 cache: false,
                 data: {roomId: $("#roomSelect").val()},
                 success: function(result) {
-                    $('#load_cont').html('');
+                    //$('#load_cont').html('');
                     $('#calendar').fullCalendar('removeEvents');
                     $('#calendar').fullCalendar('addEventSource', $.parseJSON(result));
                 }  
