@@ -30,6 +30,7 @@ namespace LibRes.App.Models.Calendar
 
         public EventRepeatViewModel EventRepeatModel { get; set; }
 
+        [Display(Name = "Reoccurring Event?")]
         public bool IsReoccuring { get; set; }
 
         [Required] [Display(Name = "Room")] public string MeetingRoomId { get; set; }

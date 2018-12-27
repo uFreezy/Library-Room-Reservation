@@ -150,3 +150,7 @@
         transform: rotate(360deg);
     }
 }
+
+.card-footer{
+    display: inline-block;
+}
