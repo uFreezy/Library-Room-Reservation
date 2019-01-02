@@ -7,7 +7,6 @@
 
     <link href="~/css/site.css" rel="stylesheet"/>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css"/>
-
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/material-dashboard@2.1.0/assets/css/material-dashboard.min.css">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons"/>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
@@ -63,6 +62,9 @@
                 <li class="nav-item">
                     @Html.ActionLink("Create Event", "CreateEvent","Calendar", new {}, new {@class = "nav-link"})
                 </li>
+                <li class="nav-item">
+                    @Html.ActionLink("About", "About","Home", new {}, new {@class = "nav-link"})
+                </li>
             </ul>
             <ul class="navbar-nav">
             
@@ -96,7 +98,5 @@
         <p>&copy; 2018 - Library Reservation System</p>
     </footer>
 </div>
-
-
 </body>
 </html>
