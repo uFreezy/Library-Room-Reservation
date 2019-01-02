@@ -1,5 +1,7 @@
 ﻿@model string
-
+@{
+    ViewBag.Title = "View Events";
+}
 <style>
     .modal-backdrop {
         /* bug fix - no overlay */
@@ -74,7 +76,6 @@
                 cache: false,
                 data: {roomId: $("#roomSelect").val()},
                 success: function(result) {
-                    //$('#load_cont').html('');
                     $('#calendar').fullCalendar('removeEvents');
                     $('#calendar').fullCalendar('addEventSource', $.parseJSON(result));
                 }  

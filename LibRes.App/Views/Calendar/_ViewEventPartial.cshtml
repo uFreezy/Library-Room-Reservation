@@ -1,51 +1,45 @@
 ﻿@model LibRes.App.Models.Calendar.EventSingleView
-<!-- Modal -->
-<style>
-    /* TODO: MOVE THEM OUTSIDE .cshtml FILE*/
-    #date-tb > thead > tr, #date-tb > tbody > tr {
-        display: inline-table;
-        table-layout: fixed;
-        width: 100%;
-    }
 
-    #date-tb { height: 300px; }
-
-    #date-tb > tbody {
-        height: 200px;
-        overflow-y: scroll;
-        position: absolute;
-    }
-</style>
 @await Component.InvokeAsync("EventEditComponent", Model.Id)
 <div class="modal" id="eventInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Event</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Event</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12">
                     @Html.LabelFor(m => m.EventName)
                     @Html.DisplayFor(m => m.EventName)
-                </p>
-                <p>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
                     @Html.LabelFor(m => m.InitialDate)
                     @Html.DisplayFor(m => m.InitialDate)
-                </p>
-                <p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
                     @Html.LabelFor(m => m.BeginHour)
                     @Html.DisplayFor(m => m.BeginHour)
-                </p>
-                <p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
                     @Html.LabelFor(m => m.EndHour)
                     @Html.DisplayFor(m => m.EndHour)
-                </p>
-                @if (Model.RepeatDates.Any())
-                {
-                    <p>
+                </div>
+            </div>
+            @if (Model.RepeatDates.Any())
+            {
+                <div class="row">
+                    <div class="col-md-12">
                         <table class="table" id="date-tb">
                             <thead>
                             <tr>
@@ -53,7 +47,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach (var date in Model.RepeatDates)
+                            @foreach (var date in Model.RepeatDates.OrderBy(r=> r.Date))
                             {
                                 <tr>
                                     <td>@(date.ToString("dd/MM/yyyy"))</td>
@@ -62,35 +56,44 @@
 
                             </tbody>
                         </table>
-
-                    </p>
-                }
-                <p>
+                    </div>
+                </div>
+            }
+            <div class="row">
+                <div class="col-md-12">
                     @Html.LabelFor(m => m.MeetingRoom)
                     @Html.DisplayFor(m => m.MeetingRoom)
-                </p>
-                <p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
                     @Html.LabelFor(m => m.Department)
                     @Html.DisplayFor(m => m.Department)
-                </p>
-                <p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
                     @Html.LabelFor(m => m.ReservationOwner)
-                    @Html.ActionLink(Model.ReservationOwner.FirstName + " " + 
-                                     Model.ReservationOwner.LastName, "Profile", 
+                    @Html.ActionLink(Model.ReservationOwner.FirstName + " " +
+                                     Model.ReservationOwner.LastName, "Profile",
                         "Account", new {userId = Model.ReservationOwner.Id})
-                </p>
-                <p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
                     @Html.LabelFor(m => m.WantsMultimedia)
                     @(Model.WantsMultimedia ? "Yes" : "No")
-                </p>
-                @if (Model.Description != null)
-                {
-                    <p>
+                </div>
+            </div>
+            @if (Model.Description != null)
+            {
+                <div class="row">
+                    <div class="col-md-12">
                         @Html.LabelFor(m => m.Description)
                         @Html.DisplayFor(m => m.Description)
-                    </p>
-                }
-            </div>
+                    </div>
+                </div>
+            }
             <div class="modal-footer">
                 @if (Model.IsOwner)
                 {
@@ -101,6 +104,8 @@
                 }
 
             </div>
+
         </div>
     </div>
+</div>
 </div>

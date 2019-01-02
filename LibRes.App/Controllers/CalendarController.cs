@@ -25,28 +25,27 @@ namespace LibRes.App.Controllers
         [HttpGet]
         public PartialViewResult ViewEventPartial(int eventId)
         {
-            var res = Context.ReservationModels
-                .Include(r => r.EventDates)
-                .Include(r => r.MeetingRoom)
-                .Include(r => r.ReservationOwner)
-                .Where(r => r.Id == eventId)
-                .Select(r => new EventSingleView
+            var res = Context.EventOccurrences
+                .Include(o => o.Reservation)
+                .Where(o => o.Id == eventId)
+                .Select(o => new EventSingleView
                 {
-                    Id = r.Id,
-                    EventName = r.EventName,
-                    InitialDate = r.EventDates.First().Occurence,
-                    RepeatDates = r.EventDates
-                        .Where(d => d.Id != r.EventDates.First().Id)
+                    Id = o.Id,
+                    EventName = o.Reservation.EventName,
+                    InitialDate = o.Occurence,
+                    RepeatDates = o.Reservation.EventDates
+                        .Where(d => d.Id != o.Id)
                         .Select(d => d.Occurence).ToList(),
-                    BeginHour = r.EventDates.First().Occurence.ToString("HH:mm"),
-                    EndHour = (r.EventDates.First().Occurence -
-                               TimeSpan.FromMinutes(r.EventDates.First().DurationMinutes)).ToString("HH:mm"),
-                    MeetingRoom = r.MeetingRoom.RoomName,
-                    Department = r.Department,
-                    ReservationOwner = r.ReservationOwner,
-                    WantsMultimedia = r.WantsMultimedia,
-                    IsOwner = r.ReservationOwner.Id == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value
+                    BeginHour = o.Occurence.ToString("HH:mm"),
+                    EndHour = (o.Occurence +
+                               TimeSpan.FromMinutes(o.DurationMinutes)).ToString("HH:mm"),
+                    MeetingRoom = o.Reservation.MeetingRoom.RoomName,
+                    Department = o.Reservation.Department,
+                    ReservationOwner = o.Reservation.ReservationOwner,
+                    WantsMultimedia = o.Reservation.WantsMultimedia,
+                    IsOwner = o.Reservation.ReservationOwner.Id == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value
                 }).FirstOrDefault();
+            
 
             return PartialView("_ViewEventPartial", res);
         }
@@ -81,7 +80,7 @@ namespace LibRes.App.Controllers
             foreach (var occ in eventOccurrences)
                 parsedEvents.Add(new EventShortView
                 {
-                    Id = occ.Reservation.Id,
+                    Id = occ.Id,
                     Name = occ.Reservation.EventName,
                     BeginDate = occ.Occurence.ToString(CultureInfo.InvariantCulture),
                     EndDate =
@@ -197,7 +196,7 @@ namespace LibRes.App.Controllers
                         var errorMsg =
                             "Another reservation is already in place in this meeting room for the following dates: ";
 
-                        foreach (var date in busyDates) errorMsg += date.ToString(CultureInfo.InvariantCulture);
+                        foreach (var occ in busyDates) errorMsg += occ.Occurence.ToString(CultureInfo.InvariantCulture);
 
                         ModelState.AddModelError("EventDate", errorMsg);
 
@@ -227,35 +226,100 @@ namespace LibRes.App.Controllers
         /// </param>
         /// <param name="eventId">The existing reservation's ID.</param>
         /// <returns>Returns 'View Events' or the event edit modal form.</returns>
-        public IActionResult EditEvent(EventEditModel model, int eventId)
+        public IActionResult EditEvent(EventEditModel model)
         {
             if (model == null || !ModelState.IsValid) return View("_EventEditModal");
-            var ev = Context.ReservationModels.First(r => r.Id == eventId);
+            if (Context.EventOccurrences.First(e => e.Id == model.Id).Occurence < DateTime.Now)
+            {
+                ModelState.AddModelError("BeginHour", "Cant edit past event");
+            }
+            
+            var ev = Context.ReservationModels
+                .Include(r => r.EventDates)
+                .Include(r => r.ReservationOwner)
+                .First(r => r.Id == Context.EventOccurrences
+                                .Include(e => e.Reservation)
+                                .First(e => e.Id == model.Id).Reservation.Id);
+            
+            if (ev.EventDates.First().Occurence == DateTime.Now && model.BeginHour.TimeOfDay < DateTime.Now.TimeOfDay)
+            {
+                ModelState.AddModelError("BeginHour","Begin date can't be in the past.");
+            }
 
+            if (model.EndHour <= model.BeginHour)
+            {
+                ModelState.AddModelError("EndHour", "End hour can't be less or equals to Begin Hour.");
+            }
+            
+            if(ModelState.ErrorCount > 0) return ViewComponent("EventEditComponent", model);
+            
+            
             // If the user is not the owner of the event,redirect to home page.
             if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value != ev.ReservationOwner.Id)
                 return RedirectToAction("Index", "Home");
-
-            // Checks if the date we're trying to update with is not in the past.
-            if (model.EventName != null) ev.EventName = model.EventName;
-            if (model.EventDates.First().Occurence.AddHours(model.BeginHour.Hour)
-                    .AddMinutes(model.BeginHour.Minute) < DateTime.Now ||
-                model.EventDates.First().Occurence.AddHours(model.EndHour.Hour)
-                    .AddMinutes(model.EndHour.Minute) < DateTime.Now
-            )
+            
+            ev.EventName = model.EventName;
+            ev.MeetingRoom = Context.RoomModels.First(e => e.Id == int.Parse(model.MeetingRoomId));
+            ev.Department = model.Department;
+            ev.WantsMultimedia = model.WantsMultimedia;
+            ev.Description = model.Description;
+            
+            
+            if (model.ShouldApplyForAllDates)
             {
-                ModelState.AddModelError("EventDates", "Dates cannot be in the past");
+                foreach (var occ in ev.EventDates)
+                {
+                    if(occ.Occurence.Date < DateTime.Today) continue;
+                    occ.Occurence = occ.Occurence.Date.Add(model.BeginHour.TimeOfDay);
+                    occ.DurationMinutes = (model.EndHour - model.BeginHour).TotalMinutes;
+                }
+                    
+                var busyDates = BusyDates(ev);
 
-                return View("_EventEditModal", model);
+                if (busyDates.Count(b => ev.EventDates.All(e => e.Id != b.Id))!= 0)
+                {
+                    var errorMsg =
+                        "Another reservation is already in place in this meeting room for the following dates: ";
+
+                    foreach (var occ in busyDates) errorMsg += occ.Occurence.ToString(CultureInfo.InvariantCulture);
+
+                    ModelState.AddModelError("BeginHour", errorMsg);
+
+                    SetRoomsToViewBag();
+
+                    return ViewComponent("EventEditComponent", model);
+                }
             }
+            else
+            {
+                var occ = ev.EventDates.First(e => e.Id == model.Id);
+                occ.Occurence = occ.Occurence.Date.Add(model.BeginHour.TimeOfDay);
+                occ.DurationMinutes = (model.EndHour - model.BeginHour).TotalMinutes;
 
-            // TODO: Implement the rest of the update. Left for discussion.
+                var mockRes = new ReservationModel
+                {
+                    EventDates = new List<EventOccurenceModel>(new[] {occ}), MeetingRoom = ev.MeetingRoom
+                };
 
+                if (BusyDates(mockRes).Count > 0)
+                {
+                    var errorMsg =
+                        "Another reservation is already in place in this meeting room for the date";
+                    
+                    ModelState.AddModelError("BeginHour", errorMsg);
+
+                    SetRoomsToViewBag();
+                    
+                    // TODO: Fix (Does not display properly)
+                    return ViewComponent("EventEditComponent", model);
+                    
+                }
+            }
 
             Context.ReservationModels.Update(ev);
             Context.SaveChanges();
 
-            return View("ViewEvents");
+            return RedirectToAction("ViewEvents");
         }
 
         /// <summary>
@@ -399,7 +463,7 @@ namespace LibRes.App.Controllers
         /// <param name="model">The model to be checked against the Database.</param>
         /// <returns>Returns list of DateTimes representing the taken dates.</returns>
         [NonAction]
-        private List<DateTime> BusyDates(ReservationModel model)
+        private List<EventOccurenceModel> BusyDates(ReservationModel model)
         {
             return (from date in model.EventDates
                 let begin = date.Occurence
@@ -408,7 +472,7 @@ namespace LibRes.App.Controllers
                     e.Reservation.MeetingRoom.Id.ToString() == model.MeetingRoom.Id.ToString() &&
                     e.Occurence < end &&
                     e.Occurence + TimeSpan.FromMinutes(e.DurationMinutes) > begin)
-                select date.Occurence).ToList();
+                select date).ToList();
         }
     }
 }

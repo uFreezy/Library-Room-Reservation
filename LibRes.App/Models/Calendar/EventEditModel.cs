@@ -10,20 +10,13 @@ namespace LibRes.App.Models.Calendar
         [Required]
         public int Id { get; set; }
         
+        [Required]
         [Display(Name = "Name")]
         public string EventName { get; set; }
-        
-        public DateTime EventDate { get; set; }
 
-        public EventRepeatViewModel EventRepeatModel { get; set; }
-
-        public bool IsReoccuring { get; set; }
-        
         [Required] 
         [Display(Name = "Room")] 
         public string MeetingRoomId { get; set; }
-
-        public ICollection<EventOccurenceModel> EventDates { get; set; }
 
         [Required]
         [Display(Name = "Beginning")]
@@ -37,12 +30,15 @@ namespace LibRes.App.Models.Calendar
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]
         public DateTime EndHour { get; set; }
 
+        [Required]
         public string Department { get; set; }
 
-        //public ApplicationUser ReservationOwner { get; set; }
-
+        [Display(Name = "Multimedia ?")]
         public bool WantsMultimedia { get; set; }
 
         public string Description { get; set; }
+
+        [Display(Name = "Apply for all future occurrences")]
+        public bool ShouldApplyForAllDates { get; set; }
     }
 }

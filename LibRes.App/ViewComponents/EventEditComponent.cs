@@ -13,26 +13,23 @@ namespace LibRes.App.ViewComponents
 {
     public class EventEditComponent : ViewComponent
     {
-        public async Task<IViewComponentResult> InvokeAsync(int eventId)
+        public async Task<IViewComponentResult> InvokeAsync(int occurrenceId)
         {
             var context = new LibResDbContext();
-            var ev = context.ReservationModels
-                .Include(r => r.ReservationOwner)
-                .Include(r => r.MeetingRoom)
-                .Include(r => r.EventDates)
-                .Where( r => r.Id == eventId)
-                .Select(r=> new EventEditModel
+            var ev = context.EventOccurrences
+               .Include(o => o.Reservation)
+                .Where( r => r.Id == occurrenceId)
+                .Select(o=> new EventEditModel
                 {
-                    Id = r.Id,
-                    EventName = r.EventName,
-                    EventDate = r.EventDates.First().Occurence,
-                    MeetingRoomId = r.MeetingRoom.Id.ToString(),
-                    EventDates = r.EventDates,
-                    BeginHour = DateTime.Parse(r.EventDates.First().Occurence.ToString("HH:mm")),
-                    EndHour = DateTime.Parse((r.EventDates.First().Occurence- TimeSpan.FromMinutes(r.EventDates.First().DurationMinutes)).ToString("HH:mm")),
-                    Department = r.Department,
-                    WantsMultimedia = r.WantsMultimedia,
-                    Description = r.Description
+                    Id = o.Id,
+                    EventName = o.Reservation.EventName,
+                    MeetingRoomId = o.Reservation.MeetingRoom.Id.ToString(),
+                    BeginHour = DateTime.Parse(o.Occurence.ToString("HH:mm")),
+                    EndHour = DateTime.Parse((o.Occurence+ TimeSpan.FromMinutes(o.DurationMinutes)).ToString("HH:mm")),
+                    Department = o.Reservation.Department,
+                    WantsMultimedia = o.Reservation.WantsMultimedia,
+                    Description = o.Reservation.Description,
+
                 })
                 .FirstOrDefault();
                 
