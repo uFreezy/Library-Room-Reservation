@@ -224,7 +224,6 @@ namespace LibRes.App.Controllers
         ///     Model containing the new data to be applied
         ///     to the existing reservation.
         /// </param>
-        /// <param name="eventId">The existing reservation's ID.</param>
         /// <returns>Returns 'View Events' or the event edit modal form.</returns>
         public IActionResult EditEvent(EventEditModel model)
         {
@@ -303,8 +302,7 @@ namespace LibRes.App.Controllers
 
                 if (BusyDates(mockRes).Count > 0)
                 {
-                    var errorMsg =
-                        "Another reservation is already in place in this meeting room for the date";
+                    const string errorMsg = "Another reservation is already in place in this meeting room for the date";
                     
                     ModelState.AddModelError("BeginHour", errorMsg);
 
@@ -359,7 +357,7 @@ namespace LibRes.App.Controllers
                 {
                     Value = r.Id.ToString(),
                     Text = r.RoomName
-                });
+                }).OrderBy(r => r.Value);
             ViewBag.Rooms = rooms;
         }
 

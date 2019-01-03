@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LibRes.App.DbModels
 {
-    public class EventOccurenceModel
+    public sealed class EventOccurenceModel
     {
         public EventOccurenceModel()
         {
@@ -21,7 +21,7 @@ namespace LibRes.App.DbModels
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required] public virtual ReservationModel Reservation { get; set; }
+        [Required] public ReservationModel Reservation { get; set; }
 
         [Required] public DateTime Occurence { get; set; }
 
