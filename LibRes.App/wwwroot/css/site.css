@@ -249,9 +249,6 @@
     display: flex;
     justify-content: flex-end !important;
 }
-.modal-footer{
-    padding: 0 !important;
-}
 
 #m-body-edit{
     padding-top: 0;
@@ -259,4 +256,7 @@
 }
 #editEvBtn{
     margin: 10px;
+}
+.paddless {
+    padding-bottom: 0;
 }

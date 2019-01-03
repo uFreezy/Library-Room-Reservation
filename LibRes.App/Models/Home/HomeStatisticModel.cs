@@ -10,5 +10,7 @@ namespace LibRes.App.Models.Home
         public int TotalEvents { get; set; }
 
         public int TotalEventsCurrentUser { get; set; }
+        
+        public Dictionary<string, bool> RoomAvailability { get; set; }
     }
 }
