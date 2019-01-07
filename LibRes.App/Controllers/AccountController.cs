@@ -149,8 +149,11 @@ namespace LibRes.App.Controllers
         {
             if (!ModelState.IsValid) return View(model);
             var user = await _userManager.FindByNameAsync(model.Email);
-            // ReSharper disable once Mvc.ViewNotResolved
-            if (user == null) return View("ForgotPasswordConfirmation");
+            if (user == null)
+            {
+                ModelState.AddModelError("Email", "User with given email doesn't exist.");
+                return View();
+            }
 
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
 
@@ -199,7 +202,8 @@ namespace LibRes.App.Controllers
 
             if (result.Succeeded) return RedirectToAction("ResetPasswordConfirmation", "Account");
 
-            // TODO: Display error view here
+            ViewBag.SecretQuestion = user.SecretQuestion;
+            ViewBag.Email = user.Email;
             return View();
         }
 

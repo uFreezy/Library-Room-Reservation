@@ -260,5 +260,9 @@
 .paddless {
     padding-bottom: 0 !important;
     padding-right: 0 !important;
-;
+}
+.nbu-logo
+{
+    max-width:  460px;
+    max-height: 197px;
 }
