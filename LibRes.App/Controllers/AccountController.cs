@@ -297,9 +297,8 @@ namespace LibRes.App.Controllers
         public IActionResult EditProfile(ProfileEditModel model)
         {
             if (!ModelState.IsValid) return View(model);
-
+            
             var usr = _userManager.GetUserAsync(HttpContext.User).Result;
-
             var profile = Context.Users.First(u => u.Id == usr.Id);
 
             if (model.FirstName != null) profile.FirstName = model.FirstName;
@@ -309,13 +308,47 @@ namespace LibRes.App.Controllers
                 if (Regex.Matches(model.PhoneNumber, @"(\+359|359|0)\d{9}").Count > 0)
                     profile.PhoneNumber = model.PhoneNumber;
                 else
+                {
                     ModelState.AddModelError("PhoneNumber", "Invalid phone number format.");
+                    return View(model);
+                }                  
             }
 
-            Context.Users.Update(profile);
-            Context.SaveChanges();
+            if (model.Password != null)
+            {
+                var isChangedSuccessfully = ChangePassword(model).Result;
+                
+                if(!isChangedSuccessfully) ModelState
+                    .AddModelError("Password","Failed to update password. Please try again later");
+            }
+
+            if (profile.FirstName != model.FirstName ||
+                profile.LastName != model.LastName ||
+                profile.PhoneNumber != model.PhoneNumber)
+            {
+                Context.Users.Update(profile);
+            
+                Context.SaveChanges();
+            }
+           
+            TempData["success"] = "Profile updated successfully! ";
 
             return View();
+        }
+
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        private async Task<bool> ChangePassword(ProfileEditModel model)
+        {
+            var user = await _userManager.FindByNameAsync(model.Email);
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, code, model.Password);
+            
+            return result.Succeeded;
         }
     }
 }

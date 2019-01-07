@@ -3,7 +3,6 @@
 @{
     ViewBag.Title = "Edit Profile";
 }
-<h2>@ViewBag.Title.</h2>
 
 @using (Html.BeginForm("EditProfile", "Account", FormMethod.Post, new {@class = "form-horizontal", role = "form"}))
 {
@@ -14,6 +13,15 @@
         </div>
         <div class="card-body">
             <form>
+                @if(TempData["success"] != null)
+                { 
+                    
+                    <div class="row">
+                        <p style="color: green;">
+                            @TempData["success"]
+                        </p>
+                    </div>
+                }
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group bmd-form-group">
@@ -37,6 +45,20 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group bmd-form-group">
+                            @Html.LabelFor(m => m.Password, new {@class = "bmd-label-floating"})
+                            @Html.PasswordFor(m => m.Password, new {@class = "form-control"})
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group bmd-form-group">
+                            @Html.LabelFor(m => m.ConfirmPassword, new {@class = "bmd-label-floating"})
+                            @Html.PasswordFor(m => m.ConfirmPassword, new {@class = "form-control"})
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-md-12">
                         <div class="form-group bmd-form-group">
                             @Html.LabelFor(m => m.PhoneNumber, new {@class = "bmd-label-floating"})
@@ -46,7 +68,6 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary pull-right btn-info">Update Profile</button>
-                <div class="clearfix"></div>
             </form>
         </div>
     </div>
