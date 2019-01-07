@@ -27,8 +27,8 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        
-                        @Html.LabelFor(m => m.EventRepeatModel.DaysOfTheWeek, new {@class = "control-label"}) 
+
+                        @Html.LabelFor(m => m.EventRepeatModel.DaysOfTheWeek, new {@class = "control-label"})
                         <div class="form-group">
                             @for (var i = 0; i < Model.EventRepeatModel.DaysOfTheWeek.Count; i++)
                             {
@@ -37,7 +37,7 @@
                                 <div class="form-check form-check-inline">
                                     <label class="form-check-label">
                                         @Html.CheckBoxFor(m => m.EventRepeatModel.DaysOfTheWeek[i].IsSelected, new {@class = "form-check-input"})
-                                      
+
                                         @Html.DisplayName(mod.DaysOfWeek.ToString())
                                         <span class="form-check-sign">
                                             <span class="check"></span>
@@ -46,7 +46,7 @@
                                 </div>
                             }
                         </div>
-                        
+
                     </div>
                 </div>
                 <div class="row">

@@ -7,16 +7,14 @@
         /* bug fix - no overlay */
         display: none !important;
     }
-    #load_cnt
-    {
-        box-shadow: none;
-    }
+
+    #load_cnt { box-shadow: none; }
 </style>
 <div id="containers"></div>
 <div>
-    @Html.DropDownList("Select Room", 
+    @Html.DropDownList("Select Room",
         (IEnumerable<SelectListItem>) ViewBag.Rooms,
-        new { @id = "roomSelect", @class = "btn btn-secondary dropdown-toggle" })
+        new {id = "roomSelect", @class = "btn btn-secondary dropdown-toggle"})
 </div>
 <div id="calendar"></div>
 <div id="load_cont"></div>
@@ -43,8 +41,8 @@
                                 '<div class="lds-roller"><div></div><div></div><div>' +
                                 '</div><div></div><div></div><div></div><div>' +
                                 '</div><div></div></div></div> </div> </div>');
-                           
-                            
+
+
                             $('#load').modal("show");
                         },
                         type: 'GET',
@@ -74,11 +72,11 @@
                 url: '@Url.Action("ViewEvents")',
                 type: 'GET',
                 cache: false,
-                data: {roomId: $("#roomSelect").val()},
+                data: { roomId: $("#roomSelect").val() },
                 success: function(result) {
                     $('#calendar').fullCalendar('removeEvents');
                     $('#calendar').fullCalendar('addEventSource', $.parseJSON(result));
-                }  
+                }
             });
         });
 

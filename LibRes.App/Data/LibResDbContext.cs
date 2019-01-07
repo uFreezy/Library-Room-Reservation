@@ -25,7 +25,6 @@ namespace LibRes.App.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-
             base.OnModelCreating(builder);
 
             builder.Entity<IdentityRole>()

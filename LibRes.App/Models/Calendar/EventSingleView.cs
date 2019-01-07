@@ -7,9 +7,8 @@ namespace LibRes.App.Models.Calendar
 {
     public class EventSingleView
     {
-        [Required]
-        public int Id { get; set; }
-        
+        [Required] public int Id { get; set; }
+
         [Required] [Display(Name = "Name: ")] public string EventName { get; set; }
 
         [Required]

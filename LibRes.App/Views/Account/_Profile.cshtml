@@ -1,10 +1,10 @@
 @model LibRes.App.Models.Account.ProfileViewModel
 
 <style>
-.dropdown-tr > td {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-}
+    .dropdown-tr > td {
+        padding-bottom: 0 !important;
+        padding-top: 0 !important;
+    }
 </style>
 
 <div class="card card-profile ml-auto mr-auto">
@@ -15,18 +15,18 @@
     </div>
     <div class="card-footer justify-content-center">
         <table class="table" id="res">
-    <thead>
-    <tr>
-        <th class="text-center">#</th>
-        <th>Repeat Dates</th>
-        <th>Event Name</th>
-        <th>Starts</th>
-        <th>Ends</th>
-        <th>Meeting Room</th>
-        <th>Department</th>
-        <th class="text-right">Needs Multimedia</th>
-    </tr>
-    </thead>
+            <thead>
+            <tr>
+                <th class="text-center">#</th>
+                <th>Repeat Dates</th>
+                <th>Event Name</th>
+                <th>Starts</th>
+                <th>Ends</th>
+                <th>Meeting Room</th>
+                <th>Department</th>
+                <th class="text-right">Needs Multimedia</th>
+            </tr>
+            </thead>
             <tbody>
             @for (var i = 0; i < Model.Events.Count; i++)
             {
@@ -45,15 +45,15 @@
                     <td>@Model.Events[i].InitialDate.Date.ToString("dd/MM/yyyy") @Model.Events[i].EndHour</td>
                     <td>@Model.Events[i].MeetingRoom</td>
                     <td>@Model.Events[i].Department</td>
-                    <td>@Html.Raw((Model.Events[i].WantsMultimedia)?"Yes":"No")</td>
+                    <td>@Html.Raw(Model.Events[i].WantsMultimedia ? "Yes" : "No")</td>
                 </tr>
                 <tr class="dropdown-tr">
                     <td colspan="8">
                         <table>
                             <thead id="collapse @i.ToString()" class="accordion-body collapse">
-                                <th>Date</th>
-                                <th>Begins</th>
-                                <th>End</th>
+                            <th>Date</th>
+                            <th>Begins</th>
+                            <th>End</th>
                             </thead>
                             <tbody id="collapse @i.ToString()" class="accordion-body collapse">
                             @foreach (var d in Model.Events[i].RepeatDates)
@@ -62,15 +62,14 @@
                                     <td>@d.ToString()</td>
                                     <td>@Model.Events[i].BeginHour</td>
                                     <td>@Model.Events[i].EndHour</td>
-                                </tr>   
+                                </tr>
                             }
                             </tbody>
                         </table>
                     </td>
-                </tr> 
+                </tr>
             }
             </tbody>
-</table>
+        </table>
     </div>
-</div>           
-                  
+</div>

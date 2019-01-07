@@ -12,6 +12,10 @@ namespace LibRes.App.Controllers
 {
     public class HomeController : BaseController
     {
+        /// <summary>
+        ///     Gets basic statistics for the front page + The room availability.
+        /// </summary>
+        /// <returns>Index View</returns>
         public IActionResult Index()
         {
             if (!HttpContext.User.Identity.IsAuthenticated) return RedirectToAction("Login", "Account");
@@ -30,14 +34,12 @@ namespace LibRes.App.Controllers
 
             var roomsAvailability = new Dictionary<string, bool>();
 
+            Context.RoomModels.ToList().ForEach(r => { roomsAvailability.Add(r.RoomName, true); });
+
             foreach (var occ in occurenceModels)
-            {
-                if (!roomsAvailability.ContainsKey(occ.Reservation.MeetingRoom.RoomName))
-                    roomsAvailability.Add(occ.Reservation.MeetingRoom.RoomName, true);
                 if (DateTime.Now.Ticks > occ.Occurence.Ticks &&
                     DateTime.Now.Ticks < TimeSpan.FromMinutes(occ.DurationMinutes).Ticks)
                     roomsAvailability[occ.Reservation.MeetingRoom.RoomName] = false;
-            }
 
             return View(new HomeStatisticModel
             {
@@ -48,6 +50,10 @@ namespace LibRes.App.Controllers
             });
         }
 
+        /// <summary>
+        ///     About page with basic info about the project.
+        /// </summary>
+        /// <returns>About View.</returns>
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
@@ -55,6 +61,10 @@ namespace LibRes.App.Controllers
             return View();
         }
 
+        /// <summary>
+        ///     Gets the 404 error view.
+        /// </summary>
+        /// <returns>Error View.</returns>
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

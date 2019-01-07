@@ -112,11 +112,7 @@ namespace LibRes.App.Controllers
                 SecretAnswer = model.SecretAnswer
             };
             var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-            {
-               // ModelState.Add
-                return View(model);
-            }
+            if (!result.Succeeded) return View(model);
 
 
             await _signInManager.SignInAsync(user, false);
@@ -208,7 +204,7 @@ namespace LibRes.App.Controllers
         }
 
         /// <summary>
-        /// Serves view confirming that the password has been changed.
+        ///     Serves view confirming that the password has been changed.
         /// </summary>
         /// <returns>View confirming that the password has been changed.</returns>
         [AllowAnonymous]
@@ -217,6 +213,13 @@ namespace LibRes.App.Controllers
             return View();
         }
 
+
+        /// <summary>
+        ///     Returns the profile page either for the current user (profile edit page)
+        ///     or for given user based on userId (profile page).
+        /// </summary>
+        /// <param name="userId">User id for the profile to be fetched. Empty if it's current user.</param>
+        /// <returns></returns>
         [HttpGet]
         [Authorize]
         [Route("/profile")]
@@ -248,7 +251,7 @@ namespace LibRes.App.Controllers
                     IsOwner = r.ReservationOwner.Id == HttpContext.User
                                   .FindFirst(ClaimTypes.NameIdentifier).Value
                 }).ToList();
-            
+
             var profile = Context.Users
                 .Where(u => u.Id == userId)
                 .Include(u => u.Reservations)
@@ -265,8 +268,8 @@ namespace LibRes.App.Controllers
         }
 
         /// <summary>
-        /// Fetches the current profile data for the logged user
-        /// and returns the profile edit form.
+        ///     Fetches the current profile data for the logged user
+        ///     and returns the profile edit form.
         /// </summary>
         /// <returns>The profile edit view.</returns>
         [HttpGet]
@@ -286,9 +289,9 @@ namespace LibRes.App.Controllers
 
             return View(profile);
         }
-        
+
         /// <summary>
-        /// Performs edit on user's profile data.
+        ///     Performs edit on user's profile data.
         /// </summary>
         /// <param name="model">The Data model user for editing.</param>
         /// <returns>View to the profile.</returns>
@@ -297,7 +300,7 @@ namespace LibRes.App.Controllers
         public IActionResult EditProfile(ProfileEditModel model)
         {
             if (!ModelState.IsValid) return View(model);
-            
+
             var usr = _userManager.GetUserAsync(HttpContext.User).Result;
             var profile = Context.Users.First(u => u.Id == usr.Id);
 
@@ -306,20 +309,23 @@ namespace LibRes.App.Controllers
             if (model.PhoneNumber != null)
             {
                 if (Regex.Matches(model.PhoneNumber, @"(\+359|359|0)\d{9}").Count > 0)
+                {
                     profile.PhoneNumber = model.PhoneNumber;
+                }
                 else
                 {
                     ModelState.AddModelError("PhoneNumber", "Invalid phone number format.");
                     return View(model);
-                }                  
+                }
             }
 
             if (model.Password != null)
             {
                 var isChangedSuccessfully = ChangePassword(model).Result;
-                
-                if(!isChangedSuccessfully) ModelState
-                    .AddModelError("Password","Failed to update password. Please try again later");
+
+                if (!isChangedSuccessfully)
+                    ModelState
+                        .AddModelError("Password", "Failed to update password. Please try again later");
             }
 
             if (profile.FirstName != model.FirstName ||
@@ -327,27 +333,27 @@ namespace LibRes.App.Controllers
                 profile.PhoneNumber != model.PhoneNumber)
             {
                 Context.Users.Update(profile);
-            
+
                 Context.SaveChanges();
             }
-           
+
             TempData["success"] = "Profile updated successfully! ";
 
             return View();
         }
 
-        
+
         /// <summary>
-        /// 
+        ///     Task which changes the user's password.
         /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
+        /// <param name="model">Model to derive the password from.</param>
+        /// <returns>True if the operation was successful. False otherwise.</returns>
         private async Task<bool> ChangePassword(ProfileEditModel model)
         {
             var user = await _userManager.FindByNameAsync(model.Email);
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
             var result = await _userManager.ResetPasswordAsync(user, code, model.Password);
-            
+
             return result.Succeeded;
         }
     }

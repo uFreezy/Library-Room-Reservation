@@ -2,112 +2,112 @@
 
 @await Component.InvokeAsync("EventEditComponent", Model.Id)
 <div class="modal" id="eventInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Event</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <div class="row">
-                <div class="col-md-12">
-                    @Html.LabelFor(m => m.EventName)
-                    @Html.DisplayFor(m => m.EventName)
-                </div>
-
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Event</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    @Html.LabelFor(m => m.InitialDate)
-                    @Html.DisplayFor(m => m.InitialDate)
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    @Html.LabelFor(m => m.BeginHour)
-                    @Html.DisplayFor(m => m.BeginHour)
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    @Html.LabelFor(m => m.EndHour)
-                    @Html.DisplayFor(m => m.EndHour)
-                </div>
-            </div>
-            @if (Model.RepeatDates.Any())
-            {
+            <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <table class="table" id="date-tb">
-                            <thead>
-                            <tr>
-                                <th>@Html.LabelFor(m => m.RepeatDates)</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach (var date in Model.RepeatDates.OrderBy(r=> r.Date))
-                            {
-                                <tr>
-                                    <td>@(date.ToString("dd/MM/yyyy"))</td>
-                                </tr>
-                            }
-
-                            </tbody>
-                        </table>
+                        @Html.LabelFor(m => m.EventName)
+                        @Html.DisplayFor(m => m.EventName)
                     </div>
+
                 </div>
-            }
-            <div class="row">
-                <div class="col-md-12">
-                    @Html.LabelFor(m => m.MeetingRoom)
-                    @Html.DisplayFor(m => m.MeetingRoom)
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    @Html.LabelFor(m => m.Department)
-                    @Html.DisplayFor(m => m.Department)
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    @Html.LabelFor(m => m.ReservationOwner)
-                    @Html.ActionLink(Model.ReservationOwner.FirstName + " " +
-                                     Model.ReservationOwner.LastName, "Profile",
-                        "Account", new {userId = Model.ReservationOwner.Id})
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    @Html.LabelFor(m => m.WantsMultimedia)
-                    @(Model.WantsMultimedia ? "Yes" : "No")
-                </div>
-            </div>
-            @if (Model.Description != null)
-            {
                 <div class="row">
                     <div class="col-md-12">
-                        @Html.LabelFor(m => m.Description)
-                        @Html.DisplayFor(m => m.Description)
+                        @Html.LabelFor(m => m.InitialDate)
+                        @Html.DisplayFor(m => m.InitialDate)
                     </div>
                 </div>
-            }
-            <div class="modal-footer paddless">
-                @if (Model.IsOwner)
+                <div class="row">
+                    <div class="col-md-12">
+                        @Html.LabelFor(m => m.BeginHour)
+                        @Html.DisplayFor(m => m.BeginHour)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        @Html.LabelFor(m => m.EndHour)
+                        @Html.DisplayFor(m => m.EndHour)
+                    </div>
+                </div>
+                @if (Model.RepeatDates.Any())
                 {
-                    <button type="button" rel="tooltip" class="btn btn-success" data-toggle="modal" data-target="#editModal" data-dismiss="modal">
-                        Edit
-                    </button>
-                    // NOTE: Using this approach we're deleting event using GET method which is bad practice.
-                    @Html.ActionLink("Delete", "DeleteEvent", "Calendar", new {occurrenceId = Model.Id, onlyCurrentOccurrence = true}, new {@class = "btn btn-danger",onclick = "return confirm('Are you sure you wish to delete this event occurence?');" })
-                    @Html.ActionLink("Delete All", "DeleteEvent", "Calendar", new {occurrenceId = Model.Id, onlyCurrentOccurrence = false}, new {@class = "btn btn-danger", onclick = "return confirm('Are you sure you wish to delete ALL occurrences for this event?');" })
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table" id="date-tb">
+                                <thead>
+                                <tr>
+                                    <th>@Html.LabelFor(m => m.RepeatDates)</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var date in Model.RepeatDates.OrderBy(r => r.Date))
+                                {
+                                    <tr>
+                                        <td>@(date.ToString("dd/MM/yyyy"))</td>
+                                    </tr>
+                                }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 }
+                <div class="row">
+                    <div class="col-md-12">
+                        @Html.LabelFor(m => m.MeetingRoom)
+                        @Html.DisplayFor(m => m.MeetingRoom)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        @Html.LabelFor(m => m.Department)
+                        @Html.DisplayFor(m => m.Department)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        @Html.LabelFor(m => m.ReservationOwner)
+                        @Html.ActionLink(Model.ReservationOwner.FirstName + " " +
+                                         Model.ReservationOwner.LastName, "Profile",
+                            "Account", new {userId = Model.ReservationOwner.Id})
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        @Html.LabelFor(m => m.WantsMultimedia)
+                        @(Model.WantsMultimedia ? "Yes" : "No")
+                    </div>
+                </div>
+                @if (Model.Description != null)
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.LabelFor(m => m.Description)
+                            @Html.DisplayFor(m => m.Description)
+                        </div>
+                    </div>
+                }
+                <div class="modal-footer paddless">
+                    @if (Model.IsOwner)
+                    {
+                        <button type="button" rel="tooltip" class="btn btn-success" data-toggle="modal" data-target="#editModal" data-dismiss="modal">
+                            Edit
+                        </button>
+                        // NOTE: Using this approach we're deleting event using GET method which is bad practice.
+                        @Html.ActionLink("Delete", "DeleteEvent", "Calendar", new {occurrenceId = Model.Id, onlyCurrentOccurrence = true}, new {@class = "btn btn-danger", onclick = "return confirm('Are you sure you wish to delete this event occurence?');"})
+                        @Html.ActionLink("Delete All", "DeleteEvent", "Calendar", new {occurrenceId = Model.Id, onlyCurrentOccurrence = false}, new {@class = "btn btn-danger", onclick = "return confirm('Are you sure you wish to delete ALL occurrences for this event?');"})
+                    }
+
+                </div>
 
             </div>
-
         </div>
     </div>
-</div>
 </div>

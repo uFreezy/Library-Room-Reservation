@@ -5,7 +5,8 @@ namespace LibRes.App.Controllers
 {
     /// <inheritdoc />
     /// <summary>
-    ///     TODO: Document why are we using this.
+    ///     Base controller used to wrap the original ASP.NET controller class.
+    ///     We use it to 'inject' the database context so it can be used across classes.
     /// </summary>
     public class BaseController : Controller
     {
