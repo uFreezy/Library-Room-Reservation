@@ -10,7 +10,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <div class="modal-body paddless">
+        <div class="modal-body">
             <div class="row">
                 <div class="col-md-12">
                     @Html.LabelFor(m => m.EventName)
@@ -94,13 +94,15 @@
                     </div>
                 </div>
             }
-            <div class="modal-footer">
+            <div class="modal-footer paddless">
                 @if (Model.IsOwner)
                 {
                     <button type="button" rel="tooltip" class="btn btn-success" data-toggle="modal" data-target="#editModal" data-dismiss="modal">
                         Edit
                     </button>
-                    @Html.ActionLink("Delete", "DeleteEvent", "Calendar", new {eventId = Model.Id}, new {@class = "btn btn-danger"})
+                    // NOTE: Using this approach we're deleting event using GET method which is bad practice.
+                    @Html.ActionLink("Delete", "DeleteEvent", "Calendar", new {occurrenceId = Model.Id, onlyCurrentOccurrence = true}, new {@class = "btn btn-danger",onclick = "return confirm('Are you sure you wish to delete this event occurence?');" })
+                    @Html.ActionLink("Delete All", "DeleteEvent", "Calendar", new {occurrenceId = Model.Id, onlyCurrentOccurrence = false}, new {@class = "btn btn-danger", onclick = "return confirm('Are you sure you wish to delete ALL occurrences for this event?');" })
                 }
 
             </div>

@@ -24,7 +24,5 @@ namespace LibRes.App.DbModels
             get => _reservations;
             set => _reservations = value;
         }    
-        
-        // TODO : Add color 
     }
 }

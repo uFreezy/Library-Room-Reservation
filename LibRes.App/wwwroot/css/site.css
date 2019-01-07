@@ -258,5 +258,7 @@
     margin: 10px;
 }
 .paddless {
-    padding-bottom: 0;
+    padding-bottom: 0 !important;
+    padding-right: 0 !important;
+;
 }

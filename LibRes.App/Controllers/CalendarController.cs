@@ -9,6 +9,7 @@ using LibRes.App.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
@@ -323,20 +324,31 @@ namespace LibRes.App.Controllers
         /// <summary>
         ///     Executes delete request on a single reservation.
         /// </summary>
-        /// <param name="eventId">The event's Id.</param>
+        /// <param name="occurrenceId">The event's Id.</param>
+        /// <param name="onlyCurrentOccurrence"></param>
         /// <returns>View of all the calendar events.</returns>
-        [HttpDelete("remove")]
-        public IActionResult DeleteEvent(int eventId)
+        //[HttpDelete("/remove")]
+        [Route("/remove")]
+        public IActionResult DeleteEvent(int occurrenceId, bool onlyCurrentOccurrence)
         {
-            if (!Context.ReservationModels.Any(r => r.Id == eventId)) return RedirectToAction("ViewEvents", "Calendar");
+            if (!Context.ReservationModels.Any(r => r.EventDates.Any( e => e.Id == occurrenceId))) return RedirectToAction("ViewEvents", "Calendar");
 
-            var ev = Context.ReservationModels.Include(r => r.ReservationOwner)
-                .First(r => r.Id == eventId);
+            if (onlyCurrentOccurrence)
+            {
+                Context.EventOccurrences
+                    .Remove(Context.EventOccurrences.First(e => e.Id == occurrenceId));
+            }
+            else
+            {
+                var ev = Context.ReservationModels
+                        .Include(r => r.ReservationOwner)
+                    .First(r => r.EventDates.Any(e => e.Id == occurrenceId));
+                if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value != ev.ReservationOwner.Id)
+                    return RedirectToAction("Index", "Home");
 
-            if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value != ev.ReservationOwner.Id)
-                return RedirectToAction("Index", "Home");
-
-            Context.ReservationModels.Remove(ev);
+                Context.ReservationModels.Remove(ev);
+            }
+            
             Context.SaveChanges();
 
             return RedirectToAction("ViewEvents", "Calendar");
