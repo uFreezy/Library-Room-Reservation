@@ -111,6 +111,9 @@
             function() {
                 if ($('input[name="IsReoccuring"]').is(":checked")) {
                     $("#exampleModal").modal();
+                    $("#exampleModal").addClass("show");
+                } else {
+                    $("#exampleModal").removeClass("show");
                 }
             });
 
