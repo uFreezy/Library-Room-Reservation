@@ -266,3 +266,16 @@
     max-width:  460px;
     max-height: 197px;
 }
+
+.card-avatar img {
+    height: 110px !important;
+    width: 110px !important;
+}
+
+.card-blur {
+    filter: blur(3px);
+}
+.head-row {
+    display: inline !important;
+    padding-bottom: 10px;
+}
