@@ -6,47 +6,70 @@
 @using (Html.BeginForm("Register", "Account", FormMethod.Post, new {@class = "form-horizontal", role = "form"}))
 {
     @Html.AntiForgeryToken()
-    <h4>Create a new account.</h4>
-    @Html.ValidationSummary("", new {@class = "text-danger"})
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            @Html.LabelFor(m => m.FirstName, new {@class = "control-label"})
-            @Html.TextBoxFor(m => m.FirstName, new {@class = "form-control"})
-        </div>
-        <div class="form-group col-md-6">
-            @Html.LabelFor(m => m.LastName, new {@class = "control-label"})
-            @Html.TextBoxFor(m => m.LastName, new {@class = "form-control"})
+    <div class="card">
+        <div class="card-body">
+            <h4>Create a new account.</h4>
+            @Html.ValidationSummary("", new {@class = "text-danger"})
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FirstName, new {@class = "control-label"})
+                        @Html.TextBoxFor(m => m.FirstName, new {@class = "form-control"})
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.LastName, new {@class = "control-label"})
+                        @Html.TextBoxFor(m => m.LastName, new {@class = "form-control"})
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Email, new {@class = "control-label"})
+                        @Html.TextBoxFor(m => m.Email, new {@class = "form-control"})
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Password, new {@class = "control-label"})
+                        @Html.PasswordFor(m => m.Password, new {@class = "form-control"})
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ConfirmPassword, new {@class = "control-label"})
+                        @Html.PasswordFor(m => m.ConfirmPassword, new {@class = "form-control"})
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PhoneNumber, new {@class = "control-label"})
+                        @Html.TextBoxFor(m => m.PhoneNumber, new {@class = "form-control"})
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.SecretQuestion, new {@class = "control-label"})
+                        @Html.TextBoxFor(m => m.SecretQuestion, new {@class = "form-control"})
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.SecretAnswer, new {@class = "control-label"})
+                        @Html.TextBoxFor(m => m.SecretAnswer, new {@class = "form-control"})
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <input type="submit" class="btn btn-info" value="Register"/>
+            </div>
         </div>
     </div>
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            @Html.LabelFor(m => m.Email, new {@class = "control-label"})
-            @Html.TextBoxFor(m => m.Email, new {@class = "form-control"})
-        </div>
-        <div class="form-group col-md-6">
-            @Html.LabelFor(m => m.Password, new {@class = "control-label"})
-            @Html.PasswordFor(m => m.Password, new {@class = "form-control"})
-        </div>
-    </div>
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            @Html.LabelFor(m => m.ConfirmPassword, new {@class = "control-label"})
-            @Html.PasswordFor(m => m.ConfirmPassword, new {@class = "form-control"})
-        </div>
-        <div class="form-group col-md-6">
-            @Html.LabelFor(m => m.PhoneNumber, new {@class = "control-label"})
-            @Html.TextBoxFor(m => m.PhoneNumber, new {@class = "form-control"})
-        </div>
-    </div>
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            @Html.LabelFor(m => m.SecretQuestion, new {@class = "control-label"})
-            @Html.TextBoxFor(m => m.SecretQuestion, new {@class = "form-control"})
-        </div>
-        <div class="form-group col-md-6">
-            @Html.LabelFor(m => m.SecretAnswer, new {@class = "control-label"})
-            @Html.TextBoxFor(m => m.SecretAnswer, new {@class = "form-control"})
-        </div>
-    </div>
-    <input type="submit" class="btn btn-default" value="Register"/>
 }

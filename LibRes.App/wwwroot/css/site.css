@@ -279,3 +279,7 @@
     display: inline !important;
     padding-bottom: 10px;
 }
+#w-hours {
+    font-style: italic;
+    font-size: 12px;
+}

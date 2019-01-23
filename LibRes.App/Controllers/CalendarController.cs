@@ -17,6 +17,22 @@ namespace LibRes.App.Controllers
     [Authorize]
     public class CalendarController : BaseController
     {
+        
+        private const string DateErrorMsg = "Another reservation is already in place in this meeting room for the date " +
+                                "or the reservation is placed out of working hours / holiday.";
+        // no easter or christmas added
+        private static readonly List<DateTime> Holidays = new List<DateTime>
+        {
+            new DateTime(DateTime.Now.Year, 1, 1),
+            new DateTime(DateTime.Now.Year, 3, 3),
+            new DateTime(DateTime.Now.Year, 5, 6),
+            new DateTime(DateTime.Now.Year, 5, 24),
+            new DateTime(DateTime.Now.Year, 9, 6),
+            new DateTime(DateTime.Now.Year, 9, 22),
+            new DateTime(DateTime.Now.Year, 11, 1)
+        };
+
+
         /// <summary>
         ///     Renders partial view as modal with info for specific reservation.
         /// </summary>
@@ -178,8 +194,7 @@ namespace LibRes.App.Controllers
 
                 if (BusyDates(reservation).Count != 0)
                 {
-                    ModelState.AddModelError("EventDate",
-                        "Another reservation is already in place in this meeting room for this time frame");
+                    ModelState.AddModelError("EventDate", DateErrorMsg);
 
                     SetRoomsToViewBag();
 
@@ -194,12 +209,11 @@ namespace LibRes.App.Controllers
 
                     if (busyDates.Count != 0)
                     {
-                        var errorMsg =
-                            "Another reservation is already in place in this meeting room for the following dates: ";
 
-                        foreach (var occ in busyDates) errorMsg += occ.Occurence.ToString(CultureInfo.InvariantCulture);
+                        var message = "";
+                        foreach (var occ in busyDates) message += DateErrorMsg + occ.Occurence.ToString(CultureInfo.InvariantCulture);
 
-                        ModelState.AddModelError("EventDate", errorMsg);
+                        ModelState.AddModelError("EventDate", message);
 
                         SetRoomsToViewBag();
 
@@ -297,7 +311,8 @@ namespace LibRes.App.Controllers
 
                 if (BusyDates(mockRes).Count > 0)
                 {
-                    const string errorMsg = "Another reservation is already in place in this meeting room for the date";
+                    const string errorMsg = "Another reservation is already in place in this meeting room for the date " +
+                                            "or the reservation is placed out of working hours / holiday.";
 
                     ModelState.AddModelError("BeginHour", errorMsg);
 
@@ -469,14 +484,40 @@ namespace LibRes.App.Controllers
         [NonAction]
         private List<EventOccurenceModel> BusyDates(ReservationModel model)
         {
-            return (from date in model.EventDates
-                let begin = date.Occurence
-                let end = date.Occurence.AddMinutes(date.DurationMinutes)
-                where Context.EventOccurrences.Any(e =>
+            var list = new List<EventOccurenceModel>();
+            foreach (var date in model.EventDates)
+            {
+                var begin = date.Occurence;
+                var end = date.Occurence.AddMinutes(date.DurationMinutes);
+
+                bool isOutOfOfficeHours;
+
+                if (date.Occurence.DayOfWeek == DayOfWeek.Saturday &&
+                    date.Occurence.DayOfWeek == DayOfWeek.Sunday)
+                    isOutOfOfficeHours = date.Occurence.Hour < 9 ||
+                                         date.Occurence.Hour + date.DurationMinutes / 60 > 17.30;
+                else
+                    isOutOfOfficeHours = date.Occurence.Hour < 8 ||
+                                         date.Occurence.Hour + date.DurationMinutes / 60 > 21;
+
+
+                var isBusy = Context.EventOccurrences.Any(e =>
                     e.Reservation.MeetingRoom.Id.ToString() == model.MeetingRoom.Id.ToString() &&
                     e.Occurence < end &&
-                    e.Occurence + TimeSpan.FromMinutes(e.DurationMinutes) > begin)
-                select date).ToList();
+                    e.Occurence + TimeSpan.FromMinutes(e.DurationMinutes) > begin);
+
+                var isForbidden = false;
+
+                foreach (var holiday in Holidays)
+                    if (date.Occurence.Day == holiday.Day && date.Occurence.Month == holiday.Month)
+                        isForbidden = true;
+
+
+                if (isOutOfOfficeHours || isBusy || isForbidden)
+                    list.Add(date);
+            }
+
+            return list;
         }
     }
 }
