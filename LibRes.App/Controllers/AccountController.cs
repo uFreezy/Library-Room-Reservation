@@ -9,6 +9,7 @@ using LibRes.App.Models.Calendar;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibRes.App.Controllers
@@ -112,7 +113,15 @@ namespace LibRes.App.Controllers
                 SecretAnswer = model.SecretAnswer
             };
             var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded) return View(model);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                
+                return View(model);
+            }
 
 
             await _signInManager.SignInAsync(user, false);
@@ -190,6 +199,8 @@ namespace LibRes.App.Controllers
             {
                 ViewBag.SecretQuestion = user.SecretQuestion;
                 ViewBag.Email = user.Email;
+                
+                ModelState.AddModelError(string.Empty, "Wrong answer!");
 
                 return View(model);
             }
