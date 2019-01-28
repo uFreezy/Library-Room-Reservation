@@ -312,7 +312,7 @@ namespace LibRes.App.Controllers
                 if (BusyDates(mockRes).Count > 0)
                 {
                     const string errorMsg = "Another reservation is already in place in this meeting room for the date " +
-                                            "or the reservation is placed out of working hours / holiday.";
+                                            "or the reservation is placed out of working hours / holiday.\n";
 
                     ModelState.AddModelError("BeginHour", errorMsg);
 
@@ -495,10 +495,10 @@ namespace LibRes.App.Controllers
                 if (date.Occurence.DayOfWeek == DayOfWeek.Saturday &&
                     date.Occurence.DayOfWeek == DayOfWeek.Sunday)
                     isOutOfOfficeHours = date.Occurence.Hour < 9 ||
-                                         date.Occurence.Hour + date.DurationMinutes / 60 > 17.30;
+                                         date.Occurence.Hour + (date.Occurence.Minute + date.DurationMinutes) / 60 > 17.3;
                 else
                     isOutOfOfficeHours = date.Occurence.Hour < 8 ||
-                                         date.Occurence.Hour + date.DurationMinutes / 60 > 21;
+                                         date.Occurence.Hour + (date.Occurence.Minute  + date.DurationMinutes) / 60 > 21;
 
 
                 var isBusy = Context.EventOccurrences.Any(e =>

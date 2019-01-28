@@ -24,8 +24,13 @@ namespace LibRes.App.Data
                 {
                     RoomName = "East Meeting Hall"
                 };
+                var sampleRoomModel3 = new RoomModel
+                {
+                    RoomName = "Main Meeting Hall"
+                };
                 context.AddRange(sampleRoomModel);
                 context.AddRange(sampleRoomModel2);
+                context.AddRange(sampleRoomModel3);
             }
 
 
@@ -121,7 +126,7 @@ namespace LibRes.App.Data
                     MeetingRoom = context.RoomModels.First(),
                     Department = "Something Very Important",
                     Description = "You should go study now!",
-                    ReservationOwner = userManager.FindByEmailAsync("test@nbu.bg").Result,
+                    ReservationOwner = userManager.FindByEmailAsync("info@nbu.bg").Result,
                     WantsMultimedia = false
                 };
 
@@ -160,9 +165,56 @@ namespace LibRes.App.Data
 
 
                 CalendarController.SetDateOccurrences(sampleCem2, sampleReservation2);
+                
+                 var sampleReservation3 = new ReservationModel
+                {
+                    EventName = "Very Serious Event",
+                    EventDates = new HashSet<EventOccurenceModel>(),
+                    MeetingRoom = context.RoomModels.Last(),
+                    Department = "Something Very Important",
+                    Description = "You should go study now!",
+                    ReservationOwner = userManager.FindByEmailAsync("test@nbu.bg").Result,
+                    WantsMultimedia = false
+                };
+
+                var sampleCem3 = new CreateEventModel
+                {
+                    BeginHour = new DateTime().AddHours(7),
+                    Department = "",
+                    Description = "",
+                    EndHour = new DateTime().AddHours(9),
+                    EventDate = DateTime.Now.AddDays(-10),
+                    EventName = "",
+                    EventRepeatModel = new EventRepeatViewModel
+                    {
+                        DaysOfTheWeek = new List<DaysOfWeekEnumModel>
+                        {
+                            new DaysOfWeekEnumModel
+                            {
+                                DaysOfWeek = DayOfWeek.Wednesday,
+                                IsSelected = true
+                            },
+                            new DaysOfWeekEnumModel
+                            {
+                                DaysOfWeek = DayOfWeek.Tuesday,
+                                IsSelected = true
+                            }
+                        },
+                        ExitDate = DateTime.Now.AddYears(2),
+                        ExitStrategy = ExitStrategy.NEVER,
+                        RepeatInterval = 1,
+                        RepeatOption = EventRepeatOptions.Monthly
+                    },
+                    IsReoccuring = true,
+                    MeetingRoomId = "1",
+                    WantsMultimedia = false
+                };
 
 
-                context.AddRange(new List<ReservationModel> {sampleReservation, sampleReservation2});
+                CalendarController.SetDateOccurrences(sampleCem3, sampleReservation3);
+
+
+                context.AddRange(new List<ReservationModel> {sampleReservation, sampleReservation2, sampleReservation3});
                 context.SaveChanges();
             }
         }
